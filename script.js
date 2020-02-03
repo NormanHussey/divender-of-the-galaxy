@@ -24,6 +24,8 @@ game.playerStats.start.x = game.board.width / 2;
 game.playerStats.start.y = game.board.height - 100;
 game.playerStats.$healthDisplay = $('#health');
 game.playerStats.$maxHealthDisplay = $('#maxHealth');
+game.playerStats.$scoreDisplay = $('#score');
+game.playerStats.score = 0;
 
 
 game.updatingActors = [];
@@ -190,15 +192,21 @@ class Ship extends Actor {
         }
     }
 
-    update() {
-        super.update();
+    checkHealth() {
         if (this.health <= 0) {
             this.health = 0;
             if (this.type === 'player') {
                 game.over = true;
+            } else {
+                game.playerStats.score += this.maxHealth * 10;
             }
             game.deleteActor(this);
         }
+    }
+
+    update() {
+        super.update();
+        this.checkHealth();
     }
 
     fire(colour = 'yellow') {
@@ -314,7 +322,7 @@ game.chooseRandomColour = function () {
 }
 
 game.randomIntInRange = function (min, max) {
-    return Math.random() * (max - min) + min;
+    return Math.floor(Math.random() * (max - min) + min);
 };
 
 game.spawnEnemy = function () {
@@ -349,6 +357,7 @@ game.updateActors = function () {
 game.updateDisplay = function () {
     game.playerStats.$healthDisplay.text(game.player.health);
     game.playerStats.$maxHealthDisplay.text(game.player.maxHealth);
+    game.playerStats.$scoreDisplay.text(game.playerStats.score);
 };
 
 game.update = function () {

@@ -38,6 +38,11 @@ body {
     position: absolute;
 }
 
+.score {
+    position: absolute;
+    right: 10%;
+}
+
 .noSelect {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
