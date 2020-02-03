@@ -188,6 +188,7 @@ class Ship extends Actor {
     handleCollision(collider) {
         // console.log(this.type, this.health);
         if (collider.actor.type !== 'bullet') {
+            this.hitBy = collider.actor.type;
             this.health -= (collider.actor.health * collider.actor.speed);
             return collider.collideFrom;
         }
