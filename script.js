@@ -394,6 +394,10 @@ game.update = function () {
     game.updateActors();
     if (!game.over) {
         game.board.move(0, game.speed);
+    } else {
+        if (localStorage.highScore < game.playerStats.score) {
+            localStorage.setItem('highScore', game.playerStats.score);
+        }
     }
     game.updateDisplay();
     requestAnimationFrame(game.update);
