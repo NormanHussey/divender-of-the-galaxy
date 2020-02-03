@@ -306,6 +306,26 @@ game.checkInput = function () {
     };
 };
 
+game.chooseRandomColour = function () {
+    const red = Math.floor(Math.random() * 255);
+    const green = Math.floor(Math.random() * 255);
+    const blue = Math.floor(Math.random() * 255);
+    return "rgb(" + String(red) +", " + String(green) + ", " + String(blue) + ")";
+}
+
+game.randomIntInRange = function (min, max) {
+    return Math.random() * (max - min) + min;
+};
+
+game.spawnEnemy = function () {
+    const x = game.randomIntInRange(0, game.board.width - 25);
+    const colour = game.chooseRandomColour();
+    const health = game.randomIntInRange(1, 5);
+    const speed = game.randomIntInRange(2, 4);
+    const reloadSpeed = game.randomIntInRange(50, 200);
+    const enemy = new Enemy (x, 10, '<div class="ship">', 'enemy', health, colour, speed, reloadSpeed);
+};
+
 game.removeFromArray = function (item, array) {
     for (var i = 0; i < array.length; i++) {
         if (array[i] === item) {
@@ -343,11 +363,12 @@ game.update = function () {
 
 game.init = function() {
     game.player = new Ship (game.playerStats.start.x, game.playerStats.start.y, '<div class="ship">', 'player', 5);
-    const enemy1 = new Enemy (game.board.width / 2 - 200, 10, '<div class="ship">', 'enemy', 1, 'blue', 2, 100);
+    // const enemy1 = new Enemy (game.board.width / 2 - 200, 10, '<div class="ship">', 'enemy', 1, 'blue', 2, 100);
     // const enemy2 = new Enemy (game.board.width / 2 - 100, 10, 2, 'green', 100);
     // const enemy3 = new Enemy (game.board.width / 2, 10, 3, 'magenta', 50);
     // const enemy4 = new Enemy (game.board.width / 2 + 100, 10, 3, 'green', 100);
     // const enemy5 = new Enemy (game.board.width / 2 + 200, 10, 1, 'blue', 150);
+    setInterval(this.spawnEnemy, 1000);
     game.addEventListeners();
     window.requestAnimationFrame(game.update);
 };
