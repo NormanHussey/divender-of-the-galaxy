@@ -404,6 +404,8 @@ game.update = function () {
 };
 
 game.init = function() {
+    const currentHighScore = localStorage.getItem('highScore');
+    console.log(currentHighScore);
     game.player = new Ship (game.playerStats.start.x, game.playerStats.start.y, '<div class="ship">', 'player', 5);
     setInterval(this.spawnEnemy, 1000);
     game.addEventListeners();
