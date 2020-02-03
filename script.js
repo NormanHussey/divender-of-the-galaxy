@@ -95,7 +95,6 @@ class Actor {
 
     handleCollision(collider) {
         // do something
-        console.log(collider);
     }
 
     move() {
@@ -120,13 +119,14 @@ class Actor {
 
 
 class Bullet extends Actor {
-    constructor(x, y, element, direction, speed, damage = 1, colour = 'yellow') {
+    constructor(x, y, element, direction, speed, damage = 1, colour = 'yellow', firedBy) {
         const type = 'bullet';
         super(x, y, element, type);
         this.direction = direction;
         this.speed = speed;
         this.damage = damage;
         this.colour = colour;
+        this.firedBy = firedBy;
         this.$element.css('background-color', this.colour);
     }
 
@@ -144,6 +144,7 @@ class Bullet extends Actor {
     handleCollision(collider) {
         if (collider.actor.health) {
             collider.actor.health -= this.damage;
+            collider.actor.hitBy = this.firedBy;
         }
         game.deleteActor(this);
     }
@@ -198,7 +199,9 @@ class Ship extends Actor {
             if (this.type === 'player') {
                 game.over = true;
             } else {
-                game.playerStats.score += this.maxHealth * 10;
+                if (this.hitBy === 'player') {
+                    game.playerStats.score += this.maxHealth * 10;
+                }
             }
             game.deleteActor(this);
         }
@@ -217,7 +220,7 @@ class Ship extends Actor {
             bulletY = this.position.y - 5;
         };
         const bulletDiv = '<div class="bullet">';
-        const newBullet = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, this.speed, 1, colour);
+        const newBullet = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, this.speed, 1, colour, this.type);
     }
 
 };
@@ -235,20 +238,37 @@ class Enemy extends Ship {
         this.intelligence = intelligence;
     }
 
-    findTarget() {
-        if (game.player.position.x < this.position.x) {
+    findTarget(movementLimitation) {
+        if (game.player.position.x < this.position.x && movementLimitation !== 'left') {
             this.position.x -= game.speed * this.speed;
-        } else if (game.player.position.x > this.position.x) {
+        } else if (game.player.position.x > this.position.x && movementLimitation !== 'right') {
             this.position.x += game.speed * this.speed;
         }
     }
 
-    move(movementLimitation) {
-        if (!movementLimitation) {
-            this.position.y += game.speed * this.speed;
-            if (this.intelligence > 1) {
-                this.findTarget();
+    chooseToFire() {
+        if (this.intelligence <= 1) {
+            this.fire(this.colour);
+        } else {
+            const playerX = game.player.position.x;
+            const playerHalfWidth = game.player.width / 2;
+            if (this.position.x >= playerX - playerHalfWidth && this.position.x <= playerX + playerHalfWidth) {
+                this.fire(this.colour);
             }
+        }
+    }
+
+    fire() {
+        super.fire(this.colour);
+        this.reloadCounter -= this.reloadSpeed;
+    }
+
+    move(movementLimitation) {
+        if (movementLimitation !== 'bottom') {
+            this.position.y += game.speed * this.speed;
+        }
+        if (this.intelligence > 1) {
+            this.findTarget(movementLimitation);
         }
     }
 
@@ -259,8 +279,7 @@ class Enemy extends Ship {
 
         this.reloadCounter++;
         if (this.reloadCounter >= this.reloadSpeed) {
-            this.fire(this.colour);
-            this.reloadCounter = 0;
+            this.chooseToFire();
         }
         super.update();
     }
@@ -294,7 +313,7 @@ game.addEventListeners = function () {
     $(window).on('click', function (e) {
         if (!game.over) {
             game.player.fire();
-        }
+        };
     });
 };
 
@@ -302,24 +321,24 @@ game.checkInput = function () {
     if (game.keys[37]) { // left
         if (game.player.left > 0) {
             game.player.inputMove(-4);
-        };
-    };
+        }
+    }
 
     if (game.keys[39]) { // right
         if (game.player.right < game.board.width) {
             game.player.inputMove(4);
-        };
-    };
+        }
+    }
 
     if (game.keys[38]) { // up
         game.speed += 0.1;
-    };
+    }
 
     if (game.keys[40]) { // down
         if (game.speed > 1.1) {
             game.speed -= 0.1;
-        };
-    };
+        }
+    }
 };
 
 game.chooseRandomColour = function () {
@@ -327,7 +346,7 @@ game.chooseRandomColour = function () {
     const green = Math.floor(Math.random() * 255);
     const blue = Math.floor(Math.random() * 255);
     return "rgb(" + String(red) +", " + String(green) + ", " + String(blue) + ")";
-}
+};
 
 game.randomIntInRange = function (min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -338,7 +357,7 @@ game.spawnEnemy = function () {
     const colour = game.chooseRandomColour();
     const health = game.randomIntInRange(1, 5);
     const speed = game.randomIntInRange(2, 4);
-    const reloadSpeed = game.randomIntInRange(50, 200);
+    const reloadSpeed = game.randomIntInRange(25, 150);
     const intelligence = game.randomIntInRange(1, 2);
     const enemy = new Enemy (x, 10, '<div class="ship">', 'enemy', health, colour, speed, reloadSpeed, intelligence);
 };
@@ -347,8 +366,8 @@ game.removeFromArray = function (item, array) {
     for (var i = 0; i < array.length; i++) {
         if (array[i] === item) {
             array.splice(i, 1);
-        };
-    };
+        }
+    }
 };
 
 game.deleteActor = function (actor) {
@@ -381,11 +400,6 @@ game.update = function () {
 
 game.init = function() {
     game.player = new Ship (game.playerStats.start.x, game.playerStats.start.y, '<div class="ship">', 'player', 5);
-    // const enemy1 = new Enemy (game.board.width / 2 - 200, 10, '<div class="ship">', 'enemy', 1, 'blue', 2, 100);
-    // const enemy2 = new Enemy (game.board.width / 2 - 100, 10, 2, 'green', 100);
-    // const enemy3 = new Enemy (game.board.width / 2, 10, 3, 'magenta', 50);
-    // const enemy4 = new Enemy (game.board.width / 2 + 100, 10, 3, 'green', 100);
-    // const enemy5 = new Enemy (game.board.width / 2 + 200, 10, 1, 'blue', 150);
     setInterval(this.spawnEnemy, 1000);
     game.addEventListeners();
     window.requestAnimationFrame(game.update);
