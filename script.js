@@ -223,7 +223,7 @@ class Ship extends Actor {
 };
 
 class Enemy extends Ship {
-    constructor(x, y, element, type, maxHealth, colour, maxSpeed = 1, reloadSpeed = 150) {
+    constructor(x, y, element, type, maxHealth, colour, maxSpeed = 1, reloadSpeed = 150, intelligence = 1) {
         super(x, y, element, type, maxHealth);
         this.direction = 1;
         this.colour = colour;
@@ -232,15 +232,23 @@ class Enemy extends Ship {
         this.speed = maxSpeed;
         this.reloadCounter = 0;
         this.reloadSpeed = reloadSpeed;
+        this.intelligence = intelligence;
     }
 
-    // handleCollision(collider) {
-    //     super.handleCollision(collider);
-    // }
+    findTarget() {
+        if (game.player.position.x < this.position.x) {
+            this.position.x -= game.speed * this.speed;
+        } else if (game.player.position.x > this.position.x) {
+            this.position.x += game.speed * this.speed;
+        }
+    }
 
     move(movementLimitation) {
         if (!movementLimitation) {
             this.position.y += game.speed * this.speed;
+            if (this.intelligence > 1) {
+                this.findTarget();
+            }
         }
     }
 
@@ -322,7 +330,7 @@ game.chooseRandomColour = function () {
 }
 
 game.randomIntInRange = function (min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
+    return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
 game.spawnEnemy = function () {
@@ -331,7 +339,8 @@ game.spawnEnemy = function () {
     const health = game.randomIntInRange(1, 5);
     const speed = game.randomIntInRange(2, 4);
     const reloadSpeed = game.randomIntInRange(50, 200);
-    const enemy = new Enemy (x, 10, '<div class="ship">', 'enemy', health, colour, speed, reloadSpeed);
+    const intelligence = game.randomIntInRange(1, 2);
+    const enemy = new Enemy (x, 10, '<div class="ship">', 'enemy', health, colour, speed, reloadSpeed, intelligence);
 };
 
 game.removeFromArray = function (item, array) {
