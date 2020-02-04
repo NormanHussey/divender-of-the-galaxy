@@ -16,10 +16,15 @@ html { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: 
     --angle: 0;
 }
 
+html {
+    font-size: 62.5%;
+}
+
 body {
     background-color: black;
     color: white;
     font-family: 'Press Start 2P', cursive;
+    font-size: 1.4rem;
 }
 
 .playArea {
@@ -41,6 +46,11 @@ body {
 .score {
     position: absolute;
     right: 10%;
+}
+
+.wave {
+    position: absolute;
+    left: 45%;
 }
 
 .noSelect {

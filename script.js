@@ -15,6 +15,8 @@ game.board = {
 };
 
 game.speed = 1;
+game.wave = 0;
+game.waveEnemies = [];
 game.over = false;
 game.keys = {};
 
@@ -25,25 +27,23 @@ game.playerStats.start.y = game.board.height - 100;
 game.playerStats.$healthDisplay = $('#health');
 game.playerStats.$maxHealthDisplay = $('#maxHealth');
 game.playerStats.$scoreDisplay = $('#score');
+game.playerStats.$waveDisplay = $('#wave');
 game.playerStats.score = 0;
 
 
 game.updatingActors = [];
 
 class Actor {
-    constructor(x, y, element, type) {
+    constructor(x, y, element, type, deploy = true) {
         this.position = {
             x: x,
             y: y,
         };
         this.$element = $(element);
         this.type = type;
-        game.board.$element.append(this.$element);
-        this.$element.css('--x', this.position.x + 'px');
-        this.$element.css('--y', this.position.y + 'px');
-        this.width = this.$element.width();
-        this.height = this.$element.height();
-        game.updatingActors.push(this);
+        if (deploy) {
+            this.deploy();
+        }
     }
 
     get top() {
@@ -68,6 +68,15 @@ class Actor {
 
     get centreY() {
         this.position.x + this.height / 2;
+    }
+
+    deploy() {
+        game.board.$element.append(this.$element);
+        this.$element.css('--x', this.position.x + 'px');
+        this.$element.css('--y', this.position.y + 'px');
+        this.width = this.$element.width();
+        this.height = this.$element.height();
+        game.updatingActors.push(this);
     }
 
     checkCollision(avoidance = 0) {
@@ -155,8 +164,8 @@ class Bullet extends Actor {
 }
 
 class Ship extends Actor {
-    constructor(x, y, element, type, maxHealth = 3) {
-        super(x, y, element, type);
+    constructor(x, y, element, type, deploy = true, maxHealth = 3) {
+        super(x, y, element, type, deploy);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.movement = 0;
@@ -232,7 +241,7 @@ class Ship extends Actor {
 
 class Enemy extends Ship {
     constructor(x, y, element, type, maxHealth, colour, maxSpeed = 1, reloadSpeed = 150, intelligence = 1) {
-        super(x, y, element, type, maxHealth);
+        super(x, y, element, type, false, maxHealth);
         this.direction = 1;
         this.colour = colour;
         this.$element.css('background-color', this.colour);
@@ -382,16 +391,16 @@ game.chooseRandomColour = function () {
 };
 
 game.randomIntInRange = function (min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-game.spawnEnemy = function () {
+game.spawnEnemy = function (minHealth, maxHealth, maxSpeed, fastestReloadSpeed, slowestReloadSpeed, minIntelligence, maxIntelligence) {
     const x = game.randomIntInRange(0, game.board.width - 25);
     // const colour = game.chooseRandomColour();
-    const health = game.randomIntInRange(1, 5);
-    const speed = game.randomIntInRange(2, 4);
-    const reloadSpeed = game.randomIntInRange(25, 150);
-    const intelligence = game.randomIntInRange(1, 3);
+    const health = game.randomIntInRange(minHealth, maxHealth);
+    const speed = game.randomIntInRange(2, maxSpeed);
+    const reloadSpeed = game.randomIntInRange(fastestReloadSpeed, slowestReloadSpeed);
+    const intelligence = game.randomIntInRange(minIntelligence, maxIntelligence);
     let colour;
     if (intelligence === 1) {
         colour = "blue";
@@ -400,7 +409,45 @@ game.spawnEnemy = function () {
     } else if (intelligence === 3) {
         colour = 'red';
     }
-    const enemy = new Enemy (x, 10, '<div class="ship">', 'enemy', health, colour, speed, reloadSpeed, intelligence);
+    return new Enemy (x, 10, '<div class="ship">', 'enemy', health, colour, speed, reloadSpeed, intelligence);
+};
+
+game.newWave = function () {
+    game.wave++;
+    const numberOfEnemies = game.wave * 10;
+    const maxHealth = Math.round(1 + (game.wave / 10));
+    const minHealth = Math.floor(1 + (game.wave / 10));
+    const maxSpeed = 2 * game.wave;
+    const fastestReloadSpeed = 150 / game.wave;
+    const slowestReloadSpeed = 150;
+    const maxIntelligence = game.wave;
+    let minIntelligence = game.wave - 2;
+    if (minIntelligence < 1) {
+        minIntelligence = 1;
+    }
+
+    for (let i = 0; i < numberOfEnemies; i++) {
+        const newEnemy = game.spawnEnemy(minHealth, maxHealth, maxSpeed, fastestReloadSpeed, slowestReloadSpeed, minIntelligence, maxIntelligence);
+        newEnemy.deployed = false;
+        game.waveEnemies.push(newEnemy);
+    }
+    game.currentWaveEnemy = 0;
+    game.deploymentInterval = setInterval(game.deployEnemy, 1000);
+};
+
+game.deployEnemy = function () {
+    
+    if (!game.waveEnemies[game.currentWaveEnemy].deployed) {
+        game.waveEnemies[game.currentWaveEnemy].deploy();
+        game.waveEnemies[game.currentWaveEnemy].deployed = true;
+    }
+}
+
+game.checkWave = function () {
+    if (game.waveEnemies.length === 0) {
+        clearInterval(game.deploymentInterval);
+        game.newWave();
+    }
 };
 
 game.removeFromArray = function (item, array) {
@@ -413,6 +460,9 @@ game.removeFromArray = function (item, array) {
 
 game.deleteActor = function (actor) {
     game.removeFromArray(actor, game.updatingActors);
+    if (actor.type === 'enemy') {
+        game.removeFromArray(actor, game.waveEnemies);
+    }
     actor.$element.remove();
     delete actor;
 };
@@ -427,9 +477,11 @@ game.updateDisplay = function () {
     game.playerStats.$healthDisplay.text(game.player.health);
     game.playerStats.$maxHealthDisplay.text(game.player.maxHealth);
     game.playerStats.$scoreDisplay.text(game.playerStats.score);
+    game.playerStats.$waveDisplay.text(game.wave);
 };
 
 game.update = function () {
+    game.checkWave();
     game.checkInput();
     game.updateActors();
     if (!game.over) {
@@ -446,8 +498,8 @@ game.update = function () {
 game.init = function() {
     const currentHighScore = localStorage.getItem('highScore');
     console.log(currentHighScore);
-    game.player = new Ship (game.playerStats.start.x, game.playerStats.start.y, '<div class="ship">', 'player', 25);
-    setInterval(this.spawnEnemy, 1000);
+    game.player = new Ship (game.playerStats.start.x, game.playerStats.start.y, '<div class="ship">', 'player', true, 25);
+    // setInterval(this.spawnEnemy, 1000);
     game.addEventListeners();
     window.requestAnimationFrame(game.update);
 };
