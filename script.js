@@ -132,7 +132,7 @@ class Actor {
 
 
 class Bullet extends Actor {
-    constructor(x, y, element, direction, speed, damage = 1, colour = 'yellow', firedBy) {
+    constructor(x, y, element, direction, speed, damage = 1, colour = 'yellow', firedBy, decayRate = 100) {
         const type = 'bullet';
         super(x, y, element, type);
         this.direction = direction;
@@ -141,13 +141,21 @@ class Bullet extends Actor {
         this.colour = colour;
         this.firedBy = firedBy;
         this.$element.css('background-color', this.colour);
+        this.decayRate = decayRate;
+        this.decay = 0;
     }
 
     update() {
-        if (this.position.y < this.height || this.bottom > game.board.height - this.height) {
+        this.decay++;
+        if (this.decay >= this.decayRate) {
             game.deleteActor(this);
-        };
-        super.update();
+        } else {
+            if (this.position.y < this.height || this.bottom > game.board.height - this.height) {
+                game.deleteActor(this);
+            } else {
+                super.update();
+            }
+        }
     }
 
     move() {
