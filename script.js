@@ -132,7 +132,7 @@ class Actor {
 
 
 class Bullet extends Actor {
-    constructor(x, y, element, direction, speed, damage = 1, colour = 'yellow', firedBy, decayRate = 100) {
+    constructor(x, y, element, direction, speed, damage = 1, colour = 'yellow', firedBy, decayDistance = 150) {
         const type = 'bullet';
         super(x, y, element, type);
         this.direction = direction;
@@ -141,13 +141,12 @@ class Bullet extends Actor {
         this.colour = colour;
         this.firedBy = firedBy;
         this.$element.css('background-color', this.colour);
-        this.decayRate = decayRate;
-        this.decay = 0;
+        this.decayDistance = decayDistance;
+        this.startY = y;
     }
 
     update() {
-        this.decay++;
-        if (this.decay >= this.decayRate) {
+        if ((this.direction === 1 && this.position.y >= this.startY + this.decayDistance) || (this.direction === -1 && this.position.y <= this.startY - this.decayDistance)) {
             game.deleteActor(this);
         } else {
             if (this.position.y < this.height || this.bottom > game.board.height - this.height) {
@@ -168,6 +167,13 @@ class Bullet extends Actor {
             collider.actor.hitBy = this.firedBy;
         }
         game.deleteActor(this);
+    }
+
+    drawSelf() {
+        super.drawSelf();
+        if (this.direction === -1) {
+            this.$element.css('--angle', '180deg');
+        }
     }
 }
 
@@ -207,7 +213,6 @@ class Ship extends Actor {
     }
 
     handleCollision(collider) {
-        // console.log(this.type, this.health);
         if (collider.actor.type !== 'bullet') {
             this.hitBy = collider.actor.type;
             this.health -= (collider.actor.health * collider.actor.speed);
@@ -252,7 +257,7 @@ class Enemy extends Ship {
         super(x, y, element, type, false, maxHealth);
         this.direction = 1;
         this.colour = colour;
-        this.$element.css('background-color', this.colour);
+        this.$element.css('--colour', this.colour);
         this.maxSpeed = maxSpeed;
         this.speed = maxSpeed;
         this.reloadCounter = 0;
@@ -289,19 +294,16 @@ class Enemy extends Ship {
         if (movementLimitation !== 'bottom') {
             this.position.y += game.speed * this.speed;
         }
-        switch (this.intelligence) {
-            case 3:
-                this.avoidCollision();
-            case 2:
-                this.findTarget(movementLimitation);
-                break;
-
+        if (game.probability(this.intelligence / 30)) {
+            this.avoidCollision();
+        }
+        if (game.probability(this.intelligence / 10)) {
+            this.findTarget(movementLimitation);
         }
     }
 
     avoidCollision() {
         const incomingCollision = this.checkCollision(10);
-        // console.log(incomingCollision.collideFrom);
         switch (incomingCollision.collideFrom) {
             case 'left':
                 this.position.x += game.speed * this.speed;
@@ -391,11 +393,12 @@ game.checkInput = function () {
     }
 };
 
-game.chooseRandomColour = function () {
+game.chooseRandomColour = function (transparency = 1) {
     const red = Math.floor(Math.random() * 255);
     const green = Math.floor(Math.random() * 255);
     const blue = Math.floor(Math.random() * 255);
-    return "rgb(" + String(red) +", " + String(green) + ", " + String(blue) + ")";
+    // return "rgba(" + String(red) +", " + String(green) + ", " + String(blue) + ")";
+    return `rgba(${red}, ${green}, ${blue}, ${transparency})`;
 };
 
 game.randomIntInRange = function (min, max) {
@@ -414,8 +417,10 @@ game.spawnEnemy = function (minHealth, maxHealth, maxSpeed, fastestReloadSpeed, 
         colour = "blue";
     } else if (intelligence === 2) {
         colour = 'green';
-    } else if (intelligence === 3) {
-        colour = 'red';
+    // } else if (intelligence === 3) {
+    //     colour = 'red';
+    } else {
+        colour = game.chooseRandomColour();
     }
     return new Enemy (x, 10, '<div class="ship">', 'enemy', health, colour, speed, reloadSpeed, intelligence);
 };
@@ -425,9 +430,9 @@ game.newWave = function () {
     const numberOfEnemies = 10 + game.wave;
     const maxHealth = Math.ceil(1 + (game.wave / 10));
     const minHealth = Math.floor(1 + (game.wave / 10));
-    const maxSpeed = 2 * game.wave;
-    const fastestReloadSpeed = 150 / game.wave;
-    const slowestReloadSpeed = 150;
+    const maxSpeed = 2 * (game.wave / 2);
+    const fastestReloadSpeed = 100 / game.wave;
+    const slowestReloadSpeed = 100;
     const maxIntelligence = game.wave;
     let minIntelligence = game.wave - 2;
     if (minIntelligence < 1) {
@@ -472,7 +477,8 @@ game.removeFromArray = function (item, array) {
 };
 
 game.probability = function (n) {
-    return !!n && Math.random() <= n;
+    const randomChance = Math.random();
+    return n > 0 && randomChance <= n;
 }
 
 game.deleteActor = function (actor) {
