@@ -132,7 +132,7 @@ class Actor {
 
 
 class Bullet extends Actor {
-    constructor(x, y, element, direction, speed, damage = 1, colour = 'yellow', firedBy, decayDistance = 150) {
+    constructor(x, y, element, direction, speed, damage = 1, colour = 'yellow', firedBy, decayDistance = 200) {
         const type = 'bullet';
         super(x, y, element, type);
         this.direction = direction;
@@ -165,6 +165,7 @@ class Bullet extends Actor {
         if (collider.actor.health) {
             collider.actor.health -= this.damage;
             collider.actor.hitBy = this.firedBy;
+            collider.actor.showHit();
         }
         game.deleteActor(this);
     }
@@ -185,12 +186,21 @@ class Ship extends Actor {
         this.movement = 0;
         this.direction = -1;
         this.speed = 1;
+        this.colour = 'yellow';
     }
 
     // rotate(direction) {
     //     this.angle += (Math.PI / 180) * 100 * direction;
     //     this.$element.css('--angle', this.angle + 'deg');
     // }
+
+    showHit() {
+        this.$element.css('--colour', 'rgba(255, 0, 0, 0.8)');
+        const thisActor = this;
+        setTimeout(function () {
+            thisActor.$element.css('--colour', thisActor.colour);
+        }, 200);
+    }
 
     inputMove(movement) {
         this.movement = movement;
@@ -216,6 +226,7 @@ class Ship extends Actor {
         if (collider.actor.type !== 'bullet') {
             this.hitBy = collider.actor.type;
             this.health -= (collider.actor.health * collider.actor.speed);
+            collider.actor.showHit();
             return collider.collideFrom;
         }
     }
@@ -397,7 +408,6 @@ game.chooseRandomColour = function (transparency = 1) {
     const red = Math.floor(Math.random() * 255);
     const green = Math.floor(Math.random() * 255);
     const blue = Math.floor(Math.random() * 255);
-    // return "rgba(" + String(red) +", " + String(green) + ", " + String(blue) + ")";
     return `rgba(${red}, ${green}, ${blue}, ${transparency})`;
 };
 
@@ -417,8 +427,6 @@ game.spawnEnemy = function (minHealth, maxHealth, maxSpeed, fastestReloadSpeed, 
         colour = "blue";
     } else if (intelligence === 2) {
         colour = 'green';
-    // } else if (intelligence === 3) {
-    //     colour = 'red';
     } else {
         colour = game.chooseRandomColour();
     }
