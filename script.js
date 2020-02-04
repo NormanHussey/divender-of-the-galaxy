@@ -432,14 +432,18 @@ game.newWave = function () {
         game.waveEnemies.push(newEnemy);
     }
     game.currentWaveEnemy = 0;
-    game.deploymentInterval = setInterval(game.deployEnemy, 1000);
+    game.deploymentInterval = setInterval(game.deployEnemy, 3000);
 };
 
 game.deployEnemy = function () {
-    
-    if (!game.waveEnemies[game.currentWaveEnemy].deployed) {
-        game.waveEnemies[game.currentWaveEnemy].deploy();
-        game.waveEnemies[game.currentWaveEnemy].deployed = true;
+    const currentEnemy = game.waveEnemies[game.currentWaveEnemy];
+    if (currentEnemy && !currentEnemy.deployed) {
+        currentEnemy.deploy();
+        currentEnemy.deployed = true;
+    }
+    game.currentWaveEnemy++;
+    if (game.currentWaveEnemy >= game.waveEnemies.length) {
+        game.currentWaveEnemy = 0;
     }
 }
 
@@ -462,6 +466,11 @@ game.deleteActor = function (actor) {
     game.removeFromArray(actor, game.updatingActors);
     if (actor.type === 'enemy') {
         game.removeFromArray(actor, game.waveEnemies);
+        if (actor.health > 0) {
+            actor.position.y = 10;
+            actor.deployed = false;
+            game.waveEnemies.push(actor);
+        }
     }
     actor.$element.remove();
     delete actor;
