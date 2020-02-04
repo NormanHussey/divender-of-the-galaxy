@@ -422,8 +422,8 @@ game.spawnEnemy = function (minHealth, maxHealth, maxSpeed, fastestReloadSpeed, 
 
 game.newWave = function () {
     game.wave++;
-    const numberOfEnemies = game.wave * 10;
-    const maxHealth = Math.round(1 + (game.wave / 10));
+    const numberOfEnemies = 10 + game.wave;
+    const maxHealth = Math.ceil(1 + (game.wave / 10));
     const minHealth = Math.floor(1 + (game.wave / 10));
     const maxSpeed = 2 * game.wave;
     const fastestReloadSpeed = 150 / game.wave;
@@ -440,7 +440,8 @@ game.newWave = function () {
         game.waveEnemies.push(newEnemy);
     }
     game.currentWaveEnemy = 0;
-    game.deploymentInterval = setInterval(game.deployEnemy, 3000);
+    const spawnInterval = 3010 - (game.wave * 10);
+    game.deploymentInterval = setInterval(game.deployEnemy, spawnInterval);
 };
 
 game.deployEnemy = function () {
@@ -469,6 +470,10 @@ game.removeFromArray = function (item, array) {
         }
     }
 };
+
+game.probability = function (n) {
+    return !!n && Math.random() <= n;
+}
 
 game.deleteActor = function (actor) {
     game.removeFromArray(actor, game.updatingActors);
