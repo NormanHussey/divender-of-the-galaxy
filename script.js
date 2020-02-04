@@ -70,11 +70,15 @@ class Actor {
         this.position.x + this.height / 2;
     }
 
-    checkCollision() {
+    checkCollision(avoidance = 0) {
         for (let i = 0; i < game.updatingActors.length; i++) {
             const actor = game.updatingActors[i];
             if (actor !== this) {
-                if (actor.left < this.right && actor.right > this.left && actor.top < this.bottom && actor.bottom > this.top ) {
+                const actorLeft = actor.left - avoidance;
+                const actorRight = actor.right + avoidance;
+                const actorTop = actor.top - avoidance;
+                const actorBottom = actor.bottom + avoidance;
+                if (actorLeft < this.right && actorRight > this.left && actorTop < this.bottom && actorBottom > this.top ) {
                     const collider = {};
                     collider.actor = actor;
                     if (actor.bottom >= (this.top - 1) && actor.bottom <= (this.top + 1)) {
@@ -268,9 +272,37 @@ class Enemy extends Ship {
         if (movementLimitation !== 'bottom') {
             this.position.y += game.speed * this.speed;
         }
-        if (this.intelligence > 1) {
-            this.findTarget(movementLimitation);
+        switch (this.intelligence) {
+            case 3:
+                this.avoidCollision();
+            case 2:
+                this.findTarget(movementLimitation);
+                break;
+
         }
+    }
+
+    avoidCollision() {
+        const incomingCollision = this.checkCollision(10);
+        // console.log(incomingCollision.collideFrom);
+        switch (incomingCollision.collideFrom) {
+            case 'left':
+                this.position.x += game.speed * this.speed;
+                break;
+
+            case 'right':
+                this.position.x -= game.speed * this.speed;
+                break;
+
+            case 'top':
+                this.position.y += game.speed * this.speed;
+                break;
+
+            case 'bottom':
+                this.position.y -= game.speed * this.speed;
+                break;
+        }
+        this.drawSelf();
     }
 
     update() {
@@ -278,11 +310,11 @@ class Enemy extends Ship {
             game.deleteActor(this);
         };
 
+        super.update();
         this.reloadCounter++;
         if (this.reloadCounter >= this.reloadSpeed) {
             this.chooseToFire();
         }
-        super.update();
     }
 
 };
@@ -355,11 +387,19 @@ game.randomIntInRange = function (min, max) {
 
 game.spawnEnemy = function () {
     const x = game.randomIntInRange(0, game.board.width - 25);
-    const colour = game.chooseRandomColour();
+    // const colour = game.chooseRandomColour();
     const health = game.randomIntInRange(1, 5);
     const speed = game.randomIntInRange(2, 4);
     const reloadSpeed = game.randomIntInRange(25, 150);
-    const intelligence = game.randomIntInRange(1, 2);
+    const intelligence = game.randomIntInRange(1, 3);
+    let colour;
+    if (intelligence === 1) {
+        colour = "blue";
+    } else if (intelligence === 2) {
+        colour = 'green';
+    } else if (intelligence === 3) {
+        colour = 'red';
+    }
     const enemy = new Enemy (x, 10, '<div class="ship">', 'enemy', health, colour, speed, reloadSpeed, intelligence);
 };
 
@@ -406,7 +446,7 @@ game.update = function () {
 game.init = function() {
     const currentHighScore = localStorage.getItem('highScore');
     console.log(currentHighScore);
-    game.player = new Ship (game.playerStats.start.x, game.playerStats.start.y, '<div class="ship">', 'player', 5);
+    game.player = new Ship (game.playerStats.start.x, game.playerStats.start.y, '<div class="ship">', 'player', 25);
     setInterval(this.spawnEnemy, 1000);
     game.addEventListeners();
     window.requestAnimationFrame(game.update);
