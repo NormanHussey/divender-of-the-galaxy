@@ -49,12 +49,21 @@ game.weaponTypes = [
         type: 'singleShot',
         reloadDelay: 0,
         decayDistance: 200,
+        decayRate: Infinity,
         asset: 'url("./assets/green_bullet.gif")'
     },
     {
         type: 'spread',
         reloadDelay: 25,
         decayDistance: 200,
+        decayRate: Infinity,
+        asset: 'url("./assets/green_bullet.gif")'
+    },
+    {
+        type: 'homingMissile',
+        reloadDelay: 75,
+        decayDistance: Infinity,
+        decayRate: 100,
         asset: 'url("./assets/green_bullet.gif")'
     },
 ];
@@ -160,7 +169,7 @@ class Actor {
 
 
 class Bullet extends Actor {
-    constructor(x, y, element, yDirection, xDirection, speed, damage = 1, firedBy, weaponType) {
+    constructor(x, y, element, yDirection, xDirection, speed, damage = 1, firedBy, weaponType, target = undefined) {
         const type = 'bullet';
         super(x, y, element, type);
         this.yDirection = yDirection;
@@ -168,12 +177,20 @@ class Bullet extends Actor {
         this.speed = speed;
         this.damage = damage;
         this.firedBy = firedBy;
-        this.decayDistance = weaponType.decayDistance;
+        this.weaponType = weaponType;
+        this.decayDistance = this.weaponType.decayDistance;
+        this.decayRate = this.weaponType.decayRate;
+        this.decay = 0;
         this.startY = y;
-        this.$element.css('--imgUrl', weaponType.asset);
+        this.$element.css('--imgUrl', this.weaponType.asset);
+        this.target = target;
     }
 
     update() {
+        this.decay++;
+        if (this.decay >= this.decayRate) {
+            game.deleteActor(this);
+        }
         if ((this.yDirection === 1 && this.position.y >= this.startY + this.decayDistance) || (this.yDirection === -1 && this.position.y <= this.startY - this.decayDistance)) {
             game.deleteActor(this);
         } else {
@@ -186,8 +203,23 @@ class Bullet extends Actor {
     }
 
     move() {
-        this.position.y += (game.speed * (this.speed * 2) * this.yDirection);
-        this.position.x += (game.speed * (this.speed * 2) * this.xDirection);
+        if (!this.target) {
+            this.position.y += (game.speed * (this.speed * 2) * this.yDirection);
+            this.position.x += (game.speed * (this.speed * 2) * this.xDirection);
+        } else {
+            if (this.target.position.y < this.position.y) {
+                this.position.y -= (game.speed * (this.speed * 2));
+            } else if (this.target.position.y > this.position.y) {
+                this.position.y += (game.speed * (this.speed * 2));
+            }
+
+            if (this.target.position.x < this.position.x) {
+                this.position.x -= (game.speed * (this.speed * 2));
+            } else if (this.target.position.x > this.position.x) {
+                this.position.x += (game.speed * (this.speed * 2));
+            }
+            
+        }
     }
 
     handleCollision(collider) {
@@ -232,7 +264,7 @@ class Ship extends Actor {
         this.reloadCounter = 0;
         this.minReloadSpeed = minReloadSpeed;
         this.reloadSpeed = this.minReloadSpeed;
-        this.weaponType = game.weaponTypes[1];
+        this.weaponType = game.weaponTypes[2];
     }
 
     // rotate(direction) {
@@ -299,6 +331,16 @@ class Ship extends Actor {
         this.checkHealth();
     }
 
+    findHomingTarget() {
+        let nearestEnemy;
+        for (let enemy of game.waveEnemies) {
+            if (enemy.deployed) {
+                nearestEnemy = enemy;
+            }
+        }
+        return nearestEnemy;
+    }
+
     fire() {
         this.reloadSpeed = this.minReloadSpeed + this.weaponType.reloadDelay;
         let bulletY;
@@ -317,6 +359,11 @@ class Ship extends Actor {
                 const newBullet1 = new Bullet(this.position.x + this.width / 2 - 5, bulletY, bulletDiv, this.direction, -1, this.speed, 1, this.type, this.weaponType);
                 const newBullet2 = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, 0, this.speed, 1, this.type, this.weaponType);
                 const newBullet3 = new Bullet(this.position.x + this.width / 2 + 5, bulletY, bulletDiv, this.direction, 1, this.speed, 1, this.type, this.weaponType);
+                break;
+
+            case "homingMissile":
+                const target = this.findHomingTarget();
+                const newBulletHoming = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, 0, this.speed, 1, this.type, this.weaponType, target);
                 break;
 
         }
@@ -343,6 +390,10 @@ class Enemy extends Ship {
                 this.position.x += game.speed * this.speed;
             }
         }
+    }
+
+    findHomingTarget() {
+        return game.player;
     }
 
     chooseToFire() {
@@ -372,24 +423,26 @@ class Enemy extends Ship {
 
     avoidCollision() {
         const incomingCollision = this.checkCollision(this.intelligence);
-        switch (incomingCollision.collideFrom) {
-            case 'left':
-                this.position.x += game.speed * this.speed;
-                break;
-
-            case 'right':
-                this.position.x -= game.speed * this.speed;
-                break;
-
-            case 'top':
-                this.position.y += game.speed * this.speed;
-                break;
-
-            case 'bottom':
-                this.position.y -= game.speed * this.speed;
-                break;
+        if (incomingCollision && incomingCollision.actor.type !== 'bullet') {
+            switch (incomingCollision.collideFrom) {
+                case 'left':
+                    this.position.x += game.speed * this.speed;
+                    break;
+    
+                case 'right':
+                    this.position.x -= game.speed * this.speed;
+                    break;
+    
+                case 'top':
+                    this.position.y += game.speed * this.speed;
+                    break;
+    
+                case 'bottom':
+                    this.position.y -= game.speed * this.speed;
+                    break;
+            }
+            this.drawSelf();
         }
-        this.drawSelf();
     }
 
     update() {
