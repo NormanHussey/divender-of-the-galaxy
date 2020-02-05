@@ -75,10 +75,12 @@ body {
 }
 
 .bullet {
+    /* --imgUrl: url('./assets/green_bullet.gif'); */
     width: 5px;
     height: 14px;
     /* border-radius: 50%; */
-    background-image: url('./assets/green_bullet.gif');
+    background-image: var(--imgUrl);
+    /* background-image: url('./assets/green_bullet.gif'); */
     /* background-repeat: no-repeat;
     background-size: contain;
     background-position: center; */

@@ -45,9 +45,18 @@ game.enemyShips = [
 ];
 
 game.weaponTypes = [
-    'singleShot',
-    'spread',
-    'laser'
+    {
+        type: 'singleShot',
+        reloadDelay: 0,
+        decayDistance: 200,
+        asset: 'url("./assets/green_bullet.gif")'
+    },
+    {
+        type: 'spread',
+        reloadDelay: 25,
+        decayDistance: 200,
+        asset: 'url("./assets/green_bullet.gif")'
+    },
 ];
 
 game.updatingActors = [];
@@ -151,7 +160,7 @@ class Actor {
 
 
 class Bullet extends Actor {
-    constructor(x, y, element, yDirection, xDirection, speed, damage = 1, firedBy, decayDistance = 200) {
+    constructor(x, y, element, yDirection, xDirection, speed, damage = 1, firedBy, weaponType) {
         const type = 'bullet';
         super(x, y, element, type);
         this.yDirection = yDirection;
@@ -159,8 +168,9 @@ class Bullet extends Actor {
         this.speed = speed;
         this.damage = damage;
         this.firedBy = firedBy;
-        this.decayDistance = decayDistance;
+        this.decayDistance = weaponType.decayDistance;
         this.startY = y;
+        this.$element.css('--imgUrl', weaponType.asset);
     }
 
     update() {
@@ -212,7 +222,7 @@ class Bullet extends Actor {
 }
 
 class Ship extends Actor {
-    constructor(x, y, element, type, deploy = true, maxHealth = 3, reloadSpeed) {
+    constructor(x, y, element, type, deploy = true, maxHealth = 3, minReloadSpeed) {
         super(x, y, element, type, deploy);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
@@ -220,7 +230,8 @@ class Ship extends Actor {
         this.direction = -1;
         this.speed = 1;
         this.reloadCounter = 0;
-        this.reloadSpeed = reloadSpeed;
+        this.minReloadSpeed = minReloadSpeed;
+        this.reloadSpeed = this.minReloadSpeed;
         this.weaponType = game.weaponTypes[1];
     }
 
@@ -289,6 +300,7 @@ class Ship extends Actor {
     }
 
     fire() {
+        this.reloadSpeed = this.minReloadSpeed + this.weaponType.reloadDelay;
         let bulletY;
         if (this.direction === 1) {
             bulletY = this.bottom + 14;
@@ -296,15 +308,15 @@ class Ship extends Actor {
             bulletY = this.position.y - 14;
         };
         const bulletDiv = '<div class="bullet">';
-        switch (this.weaponType) {
+        switch (this.weaponType.type) {
             case 'singleShot':
-                const newBullet = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, 0, this.speed, 1, this.type);
+                const newBullet = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, 0, this.speed, 1, this.type, this.weaponType);
                 break;
                 
             case 'spread':
-                const newBullet1 = new Bullet(this.position.x + this.width / 2 - 5, bulletY, bulletDiv, this.direction, -1, this.speed, 1, this.type);
-                const newBullet2 = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, 0, this.speed, 1, this.type);
-                const newBullet3 = new Bullet(this.position.x + this.width / 2 + 5, bulletY, bulletDiv, this.direction, 1, this.speed, 1, this.type);
+                const newBullet1 = new Bullet(this.position.x + this.width / 2 - 5, bulletY, bulletDiv, this.direction, -1, this.speed, 1, this.type, this.weaponType);
+                const newBullet2 = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, 0, this.speed, 1, this.type, this.weaponType);
+                const newBullet3 = new Bullet(this.position.x + this.width / 2 + 5, bulletY, bulletDiv, this.direction, 1, this.speed, 1, this.type, this.weaponType);
                 break;
 
         }
