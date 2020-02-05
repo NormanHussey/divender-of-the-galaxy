@@ -140,15 +140,13 @@ class Actor {
 
 
 class Bullet extends Actor {
-    constructor(x, y, element, direction, speed, damage = 1, colour = 'yellow', firedBy, decayDistance = 200) {
+    constructor(x, y, element, direction, speed, damage = 1, firedBy, decayDistance = 200) {
         const type = 'bullet';
         super(x, y, element, type);
         this.direction = direction;
         this.speed = speed;
         this.damage = damage;
-        this.colour = colour;
         this.firedBy = firedBy;
-        // this.$element.css('background-color', this.colour);
         this.decayDistance = decayDistance;
         this.startY = y;
     }
@@ -194,7 +192,6 @@ class Ship extends Actor {
         this.movement = 0;
         this.direction = -1;
         this.speed = 1;
-        this.colour = 'yellow';
     }
 
     // rotate(direction) {
@@ -258,7 +255,7 @@ class Ship extends Actor {
         this.checkHealth();
     }
 
-    fire(colour = 'yellow') {
+    fire() {
         let bulletY;
         if (this.direction === 1) {
             bulletY = this.bottom + 14;
@@ -266,16 +263,15 @@ class Ship extends Actor {
             bulletY = this.position.y - 14;
         };
         const bulletDiv = '<div class="bullet">';
-        const newBullet = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, this.speed, 1, colour, this.type);
+        const newBullet = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, this.speed, 1, this.type);
     }
 
 };
 
 class Enemy extends Ship {
-    constructor(x, y, element, type, maxHealth, colour, maxSpeed = 1, reloadSpeed = 150, intelligence = 1, shipNumber = 0) {
+    constructor(x, y, element, type, maxHealth, maxSpeed = 1, reloadSpeed = 150, intelligence = 1, shipNumber = 0) {
         super(x, y, element, type, false, maxHealth);
         this.direction = 1;
-        this.colour = colour;
         this.maxSpeed = maxSpeed;
         this.speed = maxSpeed;
         this.reloadCounter = 0;
@@ -297,18 +293,18 @@ class Enemy extends Ship {
 
     chooseToFire() {
         if (this.intelligence <= 1) {
-            this.fire(this.colour);
+            this.fire();
         } else {
             const playerX = game.player.position.x;
             const playerHalfWidth = game.player.width / 2;
             if (this.position.x >= playerX - playerHalfWidth && this.position.x <= playerX + playerHalfWidth) {
-                this.fire(this.colour);
+                this.fire();
             }
         }
     }
 
     fire() {
-        super.fire(this.colour);
+        super.fire();
         this.reloadCounter -= this.reloadSpeed;
     }
 
@@ -424,21 +420,12 @@ game.randomIntInRange = function (min, max) {
 
 game.spawnEnemy = function (minHealth, maxHealth, maxSpeed, fastestReloadSpeed, slowestReloadSpeed, minIntelligence, maxIntelligence) {
     const x = game.randomIntInRange(0, game.board.width - 25);
-    // const colour = game.chooseRandomColour();
     const health = game.randomIntInRange(minHealth, maxHealth);
     const speed = game.randomIntInRange(2, maxSpeed);
     const reloadSpeed = game.randomIntInRange(fastestReloadSpeed, slowestReloadSpeed);
     const intelligence = game.randomIntInRange(minIntelligence, maxIntelligence);
-    let colour;
-    if (intelligence === 1) {
-        colour = "blue";
-    } else if (intelligence === 2) {
-        colour = 'green';
-    } else {
-        colour = game.chooseRandomColour();
-    }
     const shipNumber = game.randomIntInRange(0, game.enemyShips.length - 1);
-    return new Enemy (x, 10, '<div class="ship">', 'enemy', health, colour, speed, reloadSpeed, intelligence, shipNumber);
+    return new Enemy (x, 10, '<div class="ship">', 'enemy', health, speed, reloadSpeed, intelligence, shipNumber);
 };
 
 game.newWave = function () {
