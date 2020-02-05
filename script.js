@@ -203,7 +203,7 @@ class Bullet extends Actor {
     }
 
     move() {
-        if (!this.target) {
+        if (!this.target || (this.yDirection === 1 && this.position.y < this.startY + 20) || (this.yDirection === -1 && this.position.y > this.startY - 20)) {
             this.position.y += (game.speed * (this.speed * 2) * this.yDirection);
             this.position.x += (game.speed * (this.speed * 2) * this.xDirection);
         } else {
@@ -333,9 +333,13 @@ class Ship extends Actor {
 
     findHomingTarget() {
         let nearestEnemy;
+        let nearestEnemyYPos = game.board.height;
         for (let enemy of game.waveEnemies) {
             if (enemy.deployed) {
-                nearestEnemy = enemy;
+                if ((this.position.y - enemy.position.y) < nearestEnemyYPos) {
+                    nearestEnemyYPos = enemy.position.y;
+                    nearestEnemy = enemy;
+                }
             }
         }
         return nearestEnemy;
