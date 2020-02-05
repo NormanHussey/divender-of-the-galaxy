@@ -68,6 +68,25 @@ game.weaponTypes = [
     },
 ];
 
+game.pickupTypes = [
+    {
+        type: 'health',
+        asset: 'red'
+    },
+    {
+        type: 'singleShot',
+        asset: 'yellow'
+    },
+    {
+        type: 'spread',
+        asset: 'blue'
+    },
+    {
+        type: 'homingMissile',
+        asset: 'green'
+    }
+];
+
 game.updatingActors = [];
 
 class Actor {
@@ -167,11 +186,55 @@ class Actor {
     }
 }
 
+class Pickup extends Actor {
+    constructor(x, y, element, pickupType) {
+        super(x, y, element, 'pickup', true);
+        this.pickupType = pickupType;
+        this.$element.css('--colour', this.pickupType.asset);
+    }
+
+    handleCollision(collider) {
+        if (collider.actor.type !== 'bullet') {
+            switch(this.pickupType.type) {
+                case 'health':
+                    collider.actor.health += 5;
+                    break;
+
+                case 'singleShot':
+                    collider.actor.weaponType = game.weaponTypes[0];
+                    break;
+
+                case 'spread':
+                    collider.actor.weaponType = game.weaponTypes[1];
+                    break;
+
+                case 'homingMissile':
+                    collider.actor.weaponType = game.weaponTypes[2];
+                    break;
+
+            }
+        }
+        game.deleteActor(this);
+    }
+
+    move() {
+        this.position.y += game.speed;
+    }
+
+    update() {
+        if (this.bottom > game.board.height - this.height) {
+            game.deleteActor(this);
+        } else {
+            super.update();
+        }
+    }
+
+}
+
 
 class Bullet extends Actor {
     constructor(x, y, element, yDirection, xDirection, speed, damage = 1, firedBy, weaponType, target = undefined) {
-        const type = 'bullet';
-        super(x, y, element, type);
+        super(x, y, element, 'bullet');
         this.yDirection = yDirection;
         this.xDirection = xDirection;
         this.speed = speed;
@@ -303,7 +366,7 @@ class Ship extends Actor {
     }
 
     handleCollision(collider) {
-        if (collider.actor.type !== 'bullet') {
+        if (collider.actor.type !== 'bullet' && collider.actor.type !== 'pickup') {
             this.hitBy = collider.actor.type;
             this.health -= (collider.actor.health * collider.actor.speed);
             collider.actor.showHit();
@@ -320,6 +383,7 @@ class Ship extends Actor {
                 if (this.hitBy === 'player') {
                     game.playerStats.score += this.maxHealth * 10;
                 }
+                this.dropPickUp();
             }
             game.deleteActor(this);
         }
@@ -415,6 +479,14 @@ class Enemy extends Ship {
     fire() {
         super.fire();
         this.reloadCounter -= this.reloadSpeed;
+    }
+
+    dropPickUp() {
+        if (game.probability(1)) {
+            const pickupType = game.randomIntInRange(0, game.pickupTypes.length - 1);
+            const pickupDiv = `<div class="pickup">`;
+            const newPickup = new Pickup(this.position.x, this.position.y, pickupDiv, game.pickupTypes[pickupType]);
+        }
     }
 
     move(movementLimitation) {

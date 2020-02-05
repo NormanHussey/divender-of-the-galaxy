@@ -87,3 +87,13 @@ body {
     transform: translate(var(--x), var(--y)) rotate(var(--angle));
     position: absolute;
 }
+
+.pickup {
+    --colour: red;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    transform: translate(var(--x), var(--y));
+    background: linear-gradient(var(--colour), var(--colour)), var(--imgUrl);
+    border-radius: 50%;
+}
