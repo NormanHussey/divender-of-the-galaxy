@@ -316,7 +316,7 @@ class Bullet extends Actor {
 }
 
 class Ship extends Actor {
-    constructor(x, y, element, type, deploy = true, health = 5, minReloadSpeed) {
+    constructor(x, y, element, type, deploy = true, health = 5, minReloadSpeed, weaponType = 0) {
         super(x, y, element, type, deploy);
         this.health = health;
         this.movement = 0;
@@ -325,7 +325,7 @@ class Ship extends Actor {
         this.reloadCounter = 0;
         this.minReloadSpeed = minReloadSpeed;
         this.reloadSpeed = this.minReloadSpeed;
-        this.weaponType = game.weaponTypes[2];
+        this.weaponType = game.weaponTypes[weaponType];
     }
 
     // rotate(direction) {
@@ -438,8 +438,8 @@ class Ship extends Actor {
 };
 
 class Enemy extends Ship {
-    constructor(x, y, element, type, health, maxSpeed = 1, reloadSpeed = 150, intelligence = 1, shipNumber = 0) {
-        super(x, y, element, type, false, health, reloadSpeed);
+    constructor(x, y, element, type, health, maxSpeed = 1, reloadSpeed = 150, intelligence = 1, shipNumber = 0, weaponType = 0) {
+        super(x, y, element, type, false, health, reloadSpeed, weaponType);
         this.direction = 1;
         this.maxSpeed = maxSpeed;
         this.speed = maxSpeed;
@@ -481,7 +481,7 @@ class Enemy extends Ship {
     }
 
     dropPickUp() {
-        if (game.probability(1)) {
+        if (game.probability(0.5)) {
             const pickupType = game.randomIntInRange(0, game.pickupTypes.length - 1);
             const pickupDiv = `<div class="pickup">`;
             const newPickup = new Pickup(this.position.x, this.position.y, pickupDiv, game.pickupTypes[pickupType]);
@@ -612,7 +612,15 @@ game.spawnEnemy = function (minHealth, maxHealth, maxSpeed, fastestReloadSpeed, 
     const reloadSpeed = game.randomIntInRange(fastestReloadSpeed, slowestReloadSpeed);
     const intelligence = game.randomIntInRange(minIntelligence, maxIntelligence);
     const shipNumber = game.randomIntInRange(0, game.enemyShips.length - 1);
-    return new Enemy (x, 10, '<div class="ship">', 'enemy', health, speed, reloadSpeed, intelligence, shipNumber);
+    let weaponType;
+    if (game.probability(intelligence / 10)) {
+        weaponType = 2;
+    } else if (game.probability(intelligence / 5)) {
+        weaponType = 1;
+    } else {
+        weaponType = 0;
+    }
+    return new Enemy (x, 10, '<div class="ship">', 'enemy', health, speed, reloadSpeed, intelligence, shipNumber, weaponType);
 };
 
 game.newWave = function () {
