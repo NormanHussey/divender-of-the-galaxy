@@ -30,7 +30,6 @@ game.playerStats = {
 
 game.display ={
     $health: $('#health'),
-    $maxHealth: $('#maxHealth'),
     $score: $('#score'),
     $wave: $('#wave')
 };
@@ -317,10 +316,9 @@ class Bullet extends Actor {
 }
 
 class Ship extends Actor {
-    constructor(x, y, element, type, deploy = true, maxHealth = 3, minReloadSpeed) {
+    constructor(x, y, element, type, deploy = true, health = 5, minReloadSpeed) {
         super(x, y, element, type, deploy);
-        this.maxHealth = maxHealth;
-        this.health = maxHealth;
+        this.health = health;
         this.movement = 0;
         this.direction = -1;
         this.speed = 1;
@@ -381,7 +379,7 @@ class Ship extends Actor {
                 game.over = true;
             } else {
                 if (this.hitBy === 'player') {
-                    game.playerStats.score += this.maxHealth * 10;
+                    game.playerStats.score += this.scoreValue;
                 }
                 this.dropPickUp();
             }
@@ -440,13 +438,14 @@ class Ship extends Actor {
 };
 
 class Enemy extends Ship {
-    constructor(x, y, element, type, maxHealth, maxSpeed = 1, reloadSpeed = 150, intelligence = 1, shipNumber = 0) {
-        super(x, y, element, type, false, maxHealth, reloadSpeed);
+    constructor(x, y, element, type, health, maxSpeed = 1, reloadSpeed = 150, intelligence = 1, shipNumber = 0) {
+        super(x, y, element, type, false, health, reloadSpeed);
         this.direction = 1;
         this.maxSpeed = maxSpeed;
         this.speed = maxSpeed;
         this.intelligence = intelligence;
         this.$element.css('--imgUrl', game.enemyShips[shipNumber]);
+        this.scoreValue = this.health * this.intelligence * 10;
     }
 
     findTarget(movementLimitation) {
@@ -698,7 +697,6 @@ game.updateActors = function () {
 
 game.updateDisplay = function () {
     game.display.$health.text(game.player.health);
-    game.display.$maxHealth.text(game.player.maxHealth);
     game.display.$score.text(game.playerStats.score);
     game.display.$wave.text(game.wave);
 };
