@@ -186,9 +186,10 @@ class Actor {
 }
 
 class Pickup extends Actor {
-    constructor(x, y, element, pickupType) {
+    constructor(x, y, element, pickupType, speed) {
         super(x, y, element, 'pickup', true);
         this.pickupType = pickupType;
+        this.speed = speed;
         this.$element.css('--colour', this.pickupType.asset);
     }
 
@@ -217,7 +218,7 @@ class Pickup extends Actor {
     }
 
     move() {
-        this.position.y += game.speed;
+        this.position.y += this.speed * game.speed;
     }
 
     update() {
@@ -477,11 +478,10 @@ class Enemy extends Ship {
 
     dropPickUp() {
         const chance = 0.25 + (this.scoreValue / 100);
-        console.log(chance);
         if (game.probability(chance)) {
             const pickupType = game.randomIntInRange(0, game.pickupTypes.length - 1);
             const pickupDiv = `<div class="pickup">`;
-            const newPickup = new Pickup(this.position.x, this.position.y, pickupDiv, game.pickupTypes[pickupType]);
+            const newPickup = new Pickup(this.position.x, this.position.y, pickupDiv, game.pickupTypes[pickupType], this.speed);
         }
     }
 
@@ -494,7 +494,7 @@ class Enemy extends Ship {
     }
 
     avoidCollision() {
-        const incomingCollision = this.checkCollision(this.intelligence);
+        const incomingCollision = this.checkCollision(this.intelligence - 2);
         if (incomingCollision && incomingCollision.actor.type !== 'bullet') {
             switch (incomingCollision.collideFrom) {
                 case 'left':
@@ -623,7 +623,7 @@ game.newWave = function () {
     const numberOfEnemies = 10 + game.wave;
     const maxHealth = Math.ceil(1 + (game.wave / 10));
     const minHealth = Math.floor(1 + (game.wave / 10));
-    const maxSpeed = 2 + (game.wave / 4);
+    const maxSpeed = 2 + (game.wave / 8);
     const fastestReloadSpeed = 100 / game.wave;
     const slowestReloadSpeed = 100;
     const maxIntelligence = game.wave;
