@@ -44,6 +44,12 @@ game.enemyShips = [
     'url("./assets/biggerRedShip.gif")'
 ];
 
+game.weaponTypes = [
+    'singleShot',
+    'spread',
+    'laser'
+];
+
 game.updatingActors = [];
 
 class Actor {
@@ -145,10 +151,11 @@ class Actor {
 
 
 class Bullet extends Actor {
-    constructor(x, y, element, direction, speed, damage = 1, firedBy, decayDistance = 200) {
+    constructor(x, y, element, yDirection, xDirection, speed, damage = 1, firedBy, decayDistance = 200) {
         const type = 'bullet';
         super(x, y, element, type);
-        this.direction = direction;
+        this.yDirection = yDirection;
+        this.xDirection = xDirection;
         this.speed = speed;
         this.damage = damage;
         this.firedBy = firedBy;
@@ -157,7 +164,7 @@ class Bullet extends Actor {
     }
 
     update() {
-        if ((this.direction === 1 && this.position.y >= this.startY + this.decayDistance) || (this.direction === -1 && this.position.y <= this.startY - this.decayDistance)) {
+        if ((this.yDirection === 1 && this.position.y >= this.startY + this.decayDistance) || (this.yDirection === -1 && this.position.y <= this.startY - this.decayDistance)) {
             game.deleteActor(this);
         } else {
             if (this.position.y < this.height || this.bottom > game.board.height - this.height) {
@@ -169,7 +176,8 @@ class Bullet extends Actor {
     }
 
     move() {
-        this.position.y += (game.speed * (this.speed * 2) * this.direction);
+        this.position.y += (game.speed * (this.speed * 2) * this.yDirection);
+        this.position.x += (game.speed * (this.speed * 2) * this.xDirection);
     }
 
     handleCollision(collider) {
@@ -183,8 +191,22 @@ class Bullet extends Actor {
 
     drawSelf() {
         super.drawSelf();
-        if (this.direction === 1) {
-            this.$element.css('--angle', '180deg');
+        if (this.yDirection === 1) {
+            if (this.xDirection < 0) {
+                this.$element.css('--angle', '225deg');
+            } else if (this.xDirection > 0) {
+                this.$element.css('--angle', '135deg');
+            } else {
+                this.$element.css('--angle', '180deg');
+            }
+        } else {
+                if (this.xDirection < 0) {
+                    this.$element.css('--angle', '-45deg');
+                } else if (this.xDirection > 0) {
+                    this.$element.css('--angle', '45deg');
+                } else {
+                    this.$element.css('--angle', '0deg');
+                }
         }
     }
 }
@@ -197,6 +219,7 @@ class Ship extends Actor {
         this.movement = 0;
         this.direction = -1;
         this.speed = 1;
+        this.weaponType = game.weaponTypes[1];
     }
 
     // rotate(direction) {
@@ -270,7 +293,18 @@ class Ship extends Actor {
             bulletY = this.position.y - 14;
         };
         const bulletDiv = '<div class="bullet">';
-        const newBullet = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, this.speed, 1, this.type);
+        switch (this.weaponType) {
+            case 'singleShot':
+                const newBullet = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, 0, this.speed, 1, this.type);
+                break;
+                
+            case 'spread':
+                const newBullet1 = new Bullet(this.position.x + this.width / 2 - 5, bulletY, bulletDiv, this.direction, -1, this.speed, 1, this.type);
+                const newBullet2 = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, 0, this.speed, 1, this.type);
+                const newBullet3 = new Bullet(this.position.x + this.width / 2 + 5, bulletY, bulletDiv, this.direction, 1, this.speed, 1, this.type);
+                break;
+
+        }
     }
 
 };
