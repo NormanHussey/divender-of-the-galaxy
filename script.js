@@ -285,10 +285,13 @@ class Enemy extends Ship {
     }
 
     findTarget(movementLimitation) {
-        if (game.player.position.x < this.position.x && movementLimitation !== 'left') {
-            this.position.x -= game.speed * this.speed;
-        } else if (game.player.position.x > this.position.x && movementLimitation !== 'right') {
-            this.position.x += game.speed * this.speed;
+        const distance = this.intelligence * 10;
+        if (game.player.position.y >= this.position.y - distance && game.player.position.y <= this.position.y + distance) {
+            if (game.player.position.x < this.position.x && movementLimitation !== 'left') {
+                this.position.x -= game.speed * this.speed;
+            } else if (game.player.position.x > this.position.x && movementLimitation !== 'right') {
+                this.position.x += game.speed * this.speed;
+            }
         }
     }
 
@@ -313,16 +316,12 @@ class Enemy extends Ship {
         if (movementLimitation !== 'bottom') {
             this.position.y += game.speed * this.speed;
         }
-        if (game.probability(this.intelligence / 30)) {
-            this.avoidCollision();
-        }
-        if (game.probability(this.intelligence / 10)) {
-            this.findTarget(movementLimitation);
-        }
+        this.avoidCollision();
+        this.findTarget(movementLimitation);
     }
 
     avoidCollision() {
-        const incomingCollision = this.checkCollision(10);
+        const incomingCollision = this.checkCollision(this.intelligence);
         switch (incomingCollision.collideFrom) {
             case 'left':
                 this.position.x += game.speed * this.speed;
@@ -447,7 +446,7 @@ game.newWave = function () {
     const numberOfEnemies = 10 + game.wave;
     const maxHealth = Math.ceil(1 + (game.wave / 10));
     const minHealth = Math.floor(1 + (game.wave / 10));
-    const maxSpeed = 2 * (game.wave / 2);
+    const maxSpeed = 2 + (game.wave / 4);
     const fastestReloadSpeed = 100 / game.wave;
     const slowestReloadSpeed = 100;
     const maxIntelligence = game.wave;
@@ -467,7 +466,7 @@ game.newWave = function () {
         spawnInterval = 100;
     }
     game.deploymentInterval = setInterval(game.deployEnemy, spawnInterval);
-    game.speed += 0.1;
+    game.speed += game.wave / 10;
 };
 
 game.deployEnemy = function () {
