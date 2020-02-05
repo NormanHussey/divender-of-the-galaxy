@@ -30,6 +30,14 @@ game.playerStats.$scoreDisplay = $('#score');
 game.playerStats.$waveDisplay = $('#wave');
 game.playerStats.score = 0;
 
+game.enemyShips = [];
+game.enemyShips.push('url("./assets/greenShip.gif")');
+game.enemyShips.push('url("./assets/sleekBlueShip.gif")');
+game.enemyShips.push('url("./assets/bigGreenShip.gif")');
+game.enemyShips.push('url("./assets/bigRedShip.gif")');
+game.enemyShips.push('url("./assets/bigBlueShip.gif")');
+game.enemyShips.push('url("./assets/biggerRedShip.gif")');
+
 
 game.updatingActors = [];
 
@@ -140,7 +148,7 @@ class Bullet extends Actor {
         this.damage = damage;
         this.colour = colour;
         this.firedBy = firedBy;
-        this.$element.css('background-color', this.colour);
+        // this.$element.css('background-color', this.colour);
         this.decayDistance = decayDistance;
         this.startY = y;
     }
@@ -172,7 +180,7 @@ class Bullet extends Actor {
 
     drawSelf() {
         super.drawSelf();
-        if (this.direction === -1) {
+        if (this.direction === 1) {
             this.$element.css('--angle', '180deg');
         }
     }
@@ -195,10 +203,10 @@ class Ship extends Actor {
     // }
 
     showHit() {
-        this.$element.css('--colour', 'rgba(255, 0, 0, 0.8)');
+        this.$element.css('--colour', 'rgba(255, 0, 0, 0.4)');
         const thisActor = this;
         setTimeout(function () {
-            thisActor.$element.css('--colour', thisActor.colour);
+            thisActor.$element.css('--colour', 'rgba(0, 0, 0, 0)');
         }, 200);
     }
 
@@ -253,9 +261,9 @@ class Ship extends Actor {
     fire(colour = 'yellow') {
         let bulletY;
         if (this.direction === 1) {
-            bulletY = this.bottom + 5;
+            bulletY = this.bottom + 14;
         } else {
-            bulletY = this.position.y - 5;
+            bulletY = this.position.y - 14;
         };
         const bulletDiv = '<div class="bullet">';
         const newBullet = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, this.speed, 1, colour, this.type);
@@ -264,16 +272,16 @@ class Ship extends Actor {
 };
 
 class Enemy extends Ship {
-    constructor(x, y, element, type, maxHealth, colour, maxSpeed = 1, reloadSpeed = 150, intelligence = 1) {
+    constructor(x, y, element, type, maxHealth, colour, maxSpeed = 1, reloadSpeed = 150, intelligence = 1, shipNumber = 0) {
         super(x, y, element, type, false, maxHealth);
         this.direction = 1;
         this.colour = colour;
-        this.$element.css('--colour', this.colour);
         this.maxSpeed = maxSpeed;
         this.speed = maxSpeed;
         this.reloadCounter = 0;
         this.reloadSpeed = reloadSpeed;
         this.intelligence = intelligence;
+        this.$element.css('--imgUrl', game.enemyShips[shipNumber]);
     }
 
     findTarget(movementLimitation) {
@@ -430,7 +438,8 @@ game.spawnEnemy = function (minHealth, maxHealth, maxSpeed, fastestReloadSpeed, 
     } else {
         colour = game.chooseRandomColour();
     }
-    return new Enemy (x, 10, '<div class="ship">', 'enemy', health, colour, speed, reloadSpeed, intelligence);
+    const shipNumber = game.randomIntInRange(0, game.enemyShips.length - 1);
+    return new Enemy (x, 10, '<div class="ship">', 'enemy', health, colour, speed, reloadSpeed, intelligence, shipNumber);
 };
 
 game.newWave = function () {
@@ -453,8 +462,12 @@ game.newWave = function () {
         game.waveEnemies.push(newEnemy);
     }
     game.currentWaveEnemy = 0;
-    const spawnInterval = 3010 - (game.wave * 10);
+    let spawnInterval = 3000 - (game.wave * 100);
+    if (spawnInterval < 100) {
+        spawnInterval = 100;
+    }
     game.deploymentInterval = setInterval(game.deployEnemy, spawnInterval);
+    game.speed += 0.1;
 };
 
 game.deployEnemy = function () {
@@ -523,7 +536,7 @@ game.update = function () {
     if (!game.over) {
         game.board.move(0, game.speed);
     } else {
-        if (localStorage.highScore < game.playerStats.score) {
+        if (!localStorage.highScore || localStorage.highScore < game.playerStats.score) {
             localStorage.setItem('highScore', game.playerStats.score);
         }
     }
