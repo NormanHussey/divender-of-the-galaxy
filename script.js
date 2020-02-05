@@ -20,24 +20,29 @@ game.waveEnemies = [];
 game.over = false;
 game.keys = {};
 
-game.playerStats = {};
-game.playerStats.start = {};
-game.playerStats.start.x = game.board.width / 2;
-game.playerStats.start.y = game.board.height - 100;
-game.playerStats.$healthDisplay = $('#health');
-game.playerStats.$maxHealthDisplay = $('#maxHealth');
-game.playerStats.$scoreDisplay = $('#score');
-game.playerStats.$waveDisplay = $('#wave');
-game.playerStats.score = 0;
+game.playerStats = {
+    start: {
+        x: game.board.width / 2,
+        y: game.board.height - 100
+    },
+    score: 0
+};
 
-game.enemyShips = [];
-game.enemyShips.push('url("./assets/greenShip.gif")');
-game.enemyShips.push('url("./assets/sleekBlueShip.gif")');
-game.enemyShips.push('url("./assets/bigGreenShip.gif")');
-game.enemyShips.push('url("./assets/bigRedShip.gif")');
-game.enemyShips.push('url("./assets/bigBlueShip.gif")');
-game.enemyShips.push('url("./assets/biggerRedShip.gif")');
+game.display ={
+    $health: $('#health'),
+    $maxHealth: $('#maxHealth'),
+    $score: $('#score'),
+    $wave: $('#wave')
+};
 
+game.enemyShips = [
+    'url("./assets/greenShip.gif")',
+    'url("./assets/sleekBlueShip.gif")',
+    'url("./assets/bigGreenShip.gif")',
+    'url("./assets/bigRedShip.gif")',
+    'url("./assets/bigBlueShip.gif")',
+    'url("./assets/biggerRedShip.gif")'
+];
 
 game.updatingActors = [];
 
@@ -201,9 +206,11 @@ class Ship extends Actor {
 
     showHit() {
         this.$element.css('--colour', 'rgba(255, 0, 0, 0.4)');
+        this.$element.css('border-radius', '50%');
         const thisActor = this;
         setTimeout(function () {
             thisActor.$element.css('--colour', 'rgba(0, 0, 0, 0)');
+            thisActor.$element.css('border-radius', '0');
         }, 200);
     }
 
@@ -509,10 +516,10 @@ game.updateActors = function () {
 };
 
 game.updateDisplay = function () {
-    game.playerStats.$healthDisplay.text(game.player.health);
-    game.playerStats.$maxHealthDisplay.text(game.player.maxHealth);
-    game.playerStats.$scoreDisplay.text(game.playerStats.score);
-    game.playerStats.$waveDisplay.text(game.wave);
+    game.display.$health.text(game.player.health);
+    game.display.$maxHealth.text(game.player.maxHealth);
+    game.display.$score.text(game.playerStats.score);
+    game.display.$wave.text(game.wave);
 };
 
 game.update = function () {
