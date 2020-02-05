@@ -212,13 +212,15 @@ class Bullet extends Actor {
 }
 
 class Ship extends Actor {
-    constructor(x, y, element, type, deploy = true, maxHealth = 3) {
+    constructor(x, y, element, type, deploy = true, maxHealth = 3, reloadSpeed) {
         super(x, y, element, type, deploy);
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.movement = 0;
         this.direction = -1;
         this.speed = 1;
+        this.reloadCounter = 0;
+        this.reloadSpeed = reloadSpeed;
         this.weaponType = game.weaponTypes[1];
     }
 
@@ -281,6 +283,7 @@ class Ship extends Actor {
     }
 
     update() {
+        this.reloadCounter++;
         super.update();
         this.checkHealth();
     }
@@ -311,12 +314,10 @@ class Ship extends Actor {
 
 class Enemy extends Ship {
     constructor(x, y, element, type, maxHealth, maxSpeed = 1, reloadSpeed = 150, intelligence = 1, shipNumber = 0) {
-        super(x, y, element, type, false, maxHealth);
+        super(x, y, element, type, false, maxHealth, reloadSpeed);
         this.direction = 1;
         this.maxSpeed = maxSpeed;
         this.speed = maxSpeed;
-        this.reloadCounter = 0;
-        this.reloadSpeed = reloadSpeed;
         this.intelligence = intelligence;
         this.$element.css('--imgUrl', game.enemyShips[shipNumber]);
     }
@@ -385,7 +386,6 @@ class Enemy extends Ship {
         };
 
         super.update();
-        this.reloadCounter++;
         if (this.reloadCounter >= this.reloadSpeed) {
             this.chooseToFire();
         }
@@ -411,7 +411,10 @@ game.addEventListeners = function () {
         if (!game.over) {
             switch (e.which) {
                 case 32: // space bar
-                    game.player.fire();
+                    if (game.player.reloadCounter >= game.player.reloadSpeed) {
+                        game.player.fire();
+                        game.player.reloadCounter -= game.player.reloadSpeed;
+                    }
                     break;
             }
         }
@@ -419,7 +422,10 @@ game.addEventListeners = function () {
     
     $(window).on('click', function (e) {
         if (!game.over) {
-            game.player.fire();
+            if (game.player.reloadCounter >= game.player.reloadSpeed) {
+                game.player.fire();
+                game.player.reloadCounter -= game.player.reloadSpeed;
+            }
         };
     });
 };
@@ -574,8 +580,7 @@ game.update = function () {
 game.init = function() {
     const currentHighScore = localStorage.getItem('highScore');
     console.log(currentHighScore);
-    game.player = new Ship (game.playerStats.start.x, game.playerStats.start.y, '<div class="ship">', 'player', true, 25);
-    // setInterval(this.spawnEnemy, 1000);
+    game.player = new Ship (game.playerStats.start.x, game.playerStats.start.y, '<div class="ship">', 'player', true, 25, 50);
     game.addEventListeners();
     window.requestAnimationFrame(game.update);
 };
