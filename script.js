@@ -409,6 +409,7 @@ class Ship extends Actor {
 
     fire() {
         this.reloadSpeed = this.minReloadSpeed + this.weaponType.reloadDelay;
+        this.reloadCounter -= this.reloadSpeed;
         let bulletY;
         if (this.direction === 1) {
             bulletY = this.bottom + 14;
@@ -438,11 +439,10 @@ class Ship extends Actor {
 };
 
 class Enemy extends Ship {
-    constructor(x, y, element, type, health, maxSpeed = 1, reloadSpeed = 150, intelligence = 1, shipNumber = 0, weaponType = 0) {
+    constructor(x, y, element, type, health, speed = 1, reloadSpeed = 150, intelligence = 1, shipNumber = 0, weaponType = 0) {
         super(x, y, element, type, false, health, reloadSpeed, weaponType);
         this.direction = 1;
-        this.maxSpeed = maxSpeed;
-        this.speed = maxSpeed;
+        this.speed = speed;
         this.intelligence = intelligence;
         this.$element.css('--imgUrl', game.enemyShips[shipNumber]);
         this.scoreValue = this.health * this.intelligence * 10;
@@ -475,13 +475,10 @@ class Enemy extends Ship {
         }
     }
 
-    fire() {
-        super.fire();
-        this.reloadCounter -= this.reloadSpeed;
-    }
-
     dropPickUp() {
-        if (game.probability(0.5)) {
+        const chance = 0.25 + (this.scoreValue / 100);
+        console.log(chance);
+        if (game.probability(chance)) {
             const pickupType = game.randomIntInRange(0, game.pickupTypes.length - 1);
             const pickupDiv = `<div class="pickup">`;
             const newPickup = new Pickup(this.position.x, this.position.y, pickupDiv, game.pickupTypes[pickupType]);
@@ -553,7 +550,6 @@ game.addEventListeners = function () {
                 case 32: // space bar
                     if (game.player.reloadCounter >= game.player.reloadSpeed) {
                         game.player.fire();
-                        game.player.reloadCounter -= game.player.reloadSpeed;
                     }
                     break;
             }
@@ -564,7 +560,6 @@ game.addEventListeners = function () {
         if (!game.over) {
             if (game.player.reloadCounter >= game.player.reloadSpeed) {
                 game.player.fire();
-                game.player.reloadCounter -= game.player.reloadSpeed;
             }
         };
     });
