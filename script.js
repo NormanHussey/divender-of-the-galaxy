@@ -47,6 +47,7 @@ game.weaponTypes = [
     {
         type: 'singleShot',
         reloadDelay: 0,
+        damage: 1,
         decayDistance: 200,
         decayRate: Infinity,
         asset: 'url("./assets/green_bullet.gif")'
@@ -54,13 +55,15 @@ game.weaponTypes = [
     {
         type: 'spread',
         reloadDelay: 25,
+        damage: 1,
         decayDistance: 200,
         decayRate: Infinity,
         asset: 'url("./assets/magenta_bullet.gif")'
     },
     {
         type: 'homingMissile',
-        reloadDelay: 75,
+        reloadDelay: 50,
+        damage: 2,
         decayDistance: Infinity,
         decayRate: 100,
         asset: 'url("./assets/red_bullet.gif")'
@@ -266,7 +269,7 @@ class Bullet extends Actor {
     }
 
     move() {
-        if (!this.target || (this.yDirection === 1 && this.position.y < this.startY + 20) || (this.yDirection === -1 && this.position.y > this.startY - 20)) {
+        if (!this.target || this.decay < 20) {
             this.position.y += (game.speed * (this.speed * 2) * this.yDirection);
             this.position.x += (game.speed * (this.speed * 2) * this.xDirection);
         } else {
@@ -401,10 +404,10 @@ class Ship extends Actor {
 
     findHomingTarget() {
         let nearestEnemy;
-        let nearestEnemyYPos = game.board.height;
+        let nearestEnemyYPos = 0;
         for (let enemy of game.waveEnemies) {
             if (enemy.deployed) {
-                if ((this.position.y - enemy.position.y) < nearestEnemyYPos) {
+                if (enemy.position.y > nearestEnemyYPos) {
                     nearestEnemyYPos = enemy.position.y;
                     nearestEnemy = enemy;
                 }
@@ -415,7 +418,7 @@ class Ship extends Actor {
 
     fire() {
         this.reloadSpeed = this.minReloadSpeed + this.weaponType.reloadDelay;
-        this.reloadCounter -= this.reloadSpeed;
+        this.reloadCounter = 0;
         let bulletY;
         if (this.direction === 1) {
             bulletY = this.bottom + 14;
@@ -425,13 +428,13 @@ class Ship extends Actor {
         const bulletDiv = '<div class="bullet">';
         switch (this.weaponType.type) {
             case 'singleShot':
-                const newBullet = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, 0, this.speed, 1, this.type, this.weaponType);
+                const newBullet = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, 0, this.speed, this.weaponType.damage, this.type, this.weaponType);
                 break;
                 
             case 'spread':
-                const newBullet1 = new Bullet(this.position.x + this.width / 2 - 5, bulletY, bulletDiv, this.direction, -1, this.speed, 1, this.type, this.weaponType);
-                const newBullet2 = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, 0, this.speed, 1, this.type, this.weaponType);
-                const newBullet3 = new Bullet(this.position.x + this.width / 2 + 5, bulletY, bulletDiv, this.direction, 1, this.speed, 1, this.type, this.weaponType);
+                const newBullet1 = new Bullet(this.position.x + this.width / 2 - 5, bulletY, bulletDiv, this.direction, -1, this.speed, this.weaponType.damage, this.type, this.weaponType);
+                const newBullet2 = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, 0, this.speed, this.weaponType.damage, this.type, this.weaponType);
+                const newBullet3 = new Bullet(this.position.x + this.width / 2 + 5, bulletY, bulletDiv, this.direction, 1, this.speed, this.weaponType.damage, this.type, this.weaponType);
                 break;
 
             case "homingMissile":
@@ -454,7 +457,7 @@ class Enemy extends Ship {
     }
 
     findTarget(movementLimitation) {
-        const distance = this.intelligence * 10;
+        const distance = this.intelligence * 50;
         if (game.player.position.y >= this.position.y - distance && game.player.position.y <= this.position.y + distance) {
             if (game.player.position.x < this.position.x && movementLimitation !== 'left') {
                 this.position.x -= game.speed * this.speed;
@@ -737,7 +740,7 @@ game.update = function () {
 game.init = function() {
     const currentHighScore = localStorage.getItem('highScore');
     console.log(currentHighScore);
-    game.player = new Ship (game.playerStats.start.x, game.playerStats.start.y, '<div class="ship">', 'player', true, 25, 50);
+    game.player = new Ship (game.playerStats.start.x, game.playerStats.start.y, '<div class="ship">', 'player', true, 10, 0, 0);
     game.addEventListeners();
     window.requestAnimationFrame(game.update);
 };
