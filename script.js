@@ -56,14 +56,14 @@ game.weaponTypes = [
         reloadDelay: 25,
         decayDistance: 200,
         decayRate: Infinity,
-        asset: 'url("./assets/green_bullet.gif")'
+        asset: 'url("./assets/magenta_bullet.gif")'
     },
     {
         type: 'homingMissile',
         reloadDelay: 75,
         decayDistance: Infinity,
         decayRate: 100,
-        asset: 'url("./assets/green_bullet.gif")'
+        asset: 'url("./assets/red_bullet.gif")'
     },
 ];
 
@@ -375,8 +375,8 @@ class Ship extends Actor {
 
     checkHealth() {
         if (this.health <= 0) {
-            this.health = 0;
             if (this.type === 'player') {
+                this.health = 0;
                 game.over = true;
             } else {
                 if (this.hitBy === 'player') {
@@ -384,8 +384,13 @@ class Ship extends Actor {
                 }
                 this.dropPickUp();
             }
-            game.deleteActor(this);
+            this.die();
         }
+    }
+    
+    die() {
+        game.createExplosion(this.position.x, this.position.y);        
+        game.deleteActor(this);
     }
 
     update() {
@@ -433,7 +438,6 @@ class Ship extends Actor {
                 const target = this.findHomingTarget();
                 const newBulletHoming = new Bullet(this.position.x + this.width / 2, bulletY, bulletDiv, this.direction, 0, this.speed, 1, this.type, this.weaponType, target);
                 break;
-
         }
     }
 
@@ -664,6 +668,17 @@ game.checkWave = function () {
         game.newWave();
     }
 };
+
+game.createExplosion= function (x, y) {
+    const $explosion = $('<div class="ship">');
+    $explosion.css('--x', x + 'px');
+    $explosion.css('--y', y + 'px');
+    $explosion.css('--imgUrl', 'url("./assets/explosion.gif")');
+    game.board.$element.append($explosion);
+    setTimeout(function() {
+        $explosion.remove();
+    }, 1000);
+}
 
 game.removeFromArray = function (item, array) {
     for (var i = 0; i < array.length; i++) {
