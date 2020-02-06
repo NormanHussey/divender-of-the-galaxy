@@ -89,10 +89,9 @@ body {
 }
 
 .pickup {
-    --colour: red;
     position: absolute;
-    width: 16px;
-    height: 16px;
+    width: 32px;
+    height: 32px;
     transform: translate(var(--x), var(--y));
     background: linear-gradient(var(--colour), var(--colour)), var(--imgUrl);
     border-radius: 50%;

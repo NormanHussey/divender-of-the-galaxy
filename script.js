@@ -70,19 +70,19 @@ game.weaponTypes = [
 game.pickupTypes = [
     {
         type: 'health',
-        asset: 'red'
+        asset: 'url("./assets/healthPickup.png")'
     },
     {
         type: 'singleShot',
-        asset: 'yellow'
+        asset: 'url("./assets/singleShotPickup.png")'
     },
     {
         type: 'spread',
-        asset: 'blue'
+        asset: 'url("./assets/spreadPickup.png")'
     },
     {
         type: 'homingMissile',
-        asset: 'green'
+        asset: 'url("./assets/homingMissilePickup.png")'
     }
 ];
 
@@ -190,7 +190,7 @@ class Pickup extends Actor {
         super(x, y, element, 'pickup', true);
         this.pickupType = pickupType;
         this.speed = speed;
-        this.$element.css('--colour', this.pickupType.asset);
+        this.$element.css('--imgUrl', this.pickupType.asset);
     }
 
     handleCollision(collider) {
@@ -213,8 +213,8 @@ class Pickup extends Actor {
                     break;
 
             }
+            game.deleteActor(this);
         }
-        game.deleteActor(this);
     }
 
     move() {
