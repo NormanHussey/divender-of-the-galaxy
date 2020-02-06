@@ -538,8 +538,19 @@ class Enemy extends Ship {
 };
 
 game.addEventListeners = function () {
-    game.board.$element.mousemove(function (e) {
+    game.board.$element.on('mousemove', function (e) {
         game.player.inputMove((e.pageX - this.offsetLeft) - game.player.position.x);
+    });
+
+    game.board.$element.on('tap', function (e) {
+        console.log('tap');
+    });
+
+    game.board.$element.on('touchmove', function(e) {
+        const touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+        x = touch.pageX;
+        game.player.inputMove((x - this.offsetLeft) - game.player.position.x);
+        return false;
     });
     
     $(window).on("keydown", function (e) {
