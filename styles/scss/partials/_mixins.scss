@@ -1,0 +1,43 @@
+// Flex Mixins
+
+@mixin flexFullCentre($direction: row) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: $direction;
+}
+
+@mixin flexBetween($direction: row, $align: center) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: space-between;
+    align-items: $align;
+}
+
+// Image Rendering Mixin
+
+@mixin pixelArt() {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+// Media Query Mixins
+
+@mixin mq-desktop-large() {
+    @media (min-width: 1600px) {
+        @content;
+    }
+}
+
+@mixin mq-tablet() {
+    @media (max-width: 800px) {
+        @content;
+    }
+}
+
+@mixin mq-mobile() {
+    @media (max-width: 460px) {
+        @content;
+    }
+}

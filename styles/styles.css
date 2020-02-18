@@ -1,0 +1,1116 @@
+html {
+  line-height: 1.15;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+article, aside, footer, header, nav, section {
+  display: block;
+}
+
+h1 {
+  font-size: 2em;
+  margin: .67em 0;
+}
+
+figcaption, figure, main {
+  display: block;
+}
+
+figure {
+  margin: 1em 40px;
+}
+
+hr {
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box;
+  height: 0;
+  overflow: visible;
+}
+
+pre {
+  font-family: monospace,monospace;
+  font-size: 1em;
+}
+
+a {
+  background-color: transparent;
+  -webkit-text-decoration-skip: objects;
+}
+
+abbr[title] {
+  border-bottom: none;
+  text-decoration: underline;
+  -webkit-text-decoration: underline dotted;
+          text-decoration: underline dotted;
+}
+
+b, strong {
+  font-weight: inherit;
+}
+
+b, strong {
+  font-weight: bolder;
+}
+
+code, kbd, samp {
+  font-family: monospace,monospace;
+  font-size: 1em;
+}
+
+dfn {
+  font-style: italic;
+}
+
+mark {
+  background-color: #ff0;
+  color: #000;
+}
+
+small {
+  font-size: 80%;
+}
+
+sub, sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -.25em;
+}
+
+sup {
+  top: -.5em;
+}
+
+audio, video {
+  display: inline-block;
+}
+
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+
+img {
+  border-style: none;
+}
+
+svg:not(:root) {
+  overflow: hidden;
+}
+
+button, input, optgroup, select, textarea {
+  font-family: sans-serif;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+
+button, input {
+  overflow: visible;
+}
+
+button, select {
+  text-transform: none;
+}
+
+button, html [type=button], [type=reset], [type=submit] {
+  -webkit-appearance: button;
+}
+
+button::-moz-focus-inner, [type=button]::-moz-focus-inner, [type=reset]::-moz-focus-inner, [type=submit]::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+button:-moz-focusring, [type=button]:-moz-focusring, [type=reset]:-moz-focusring, [type=submit]:-moz-focusring {
+  outline: 1px dotted ButtonText;
+}
+
+fieldset {
+  padding: .35em .75em .625em;
+}
+
+legend {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  color: inherit;
+  display: table;
+  max-width: 100%;
+  padding: 0;
+  white-space: normal;
+}
+
+progress {
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+textarea {
+  overflow: auto;
+}
+
+[type=checkbox], [type=radio] {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 0;
+}
+
+[type=number]::-webkit-inner-spin-button, [type=number]::-webkit-outer-spin-button {
+  height: auto;
+}
+
+[type=search] {
+  -webkit-appearance: textfield;
+  outline-offset: -2px;
+}
+
+[type=search]::-webkit-search-cancel-button, [type=search]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit;
+}
+
+details, menu {
+  display: block;
+}
+
+summary {
+  display: list-item;
+}
+
+canvas {
+  display: inline-block;
+}
+
+template {
+  display: none;
+}
+
+[hidden] {
+  display: none;
+}
+
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: '';
+  clear: both;
+  height: 0;
+}
+
+html {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  -webkit-box-sizing: inherit;
+          box-sizing: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  -webkit-clip-path: inset(100%);
+          clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+:root {
+  --x: 0;
+  --y: 0;
+  --scaleY: 1;
+  --bgX: 0;
+  --bgY: 0;
+  --angle: 0;
+  --colour: rgba(255, 255, 255, 0);
+  --imgUrl: url('');
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  background-color: black;
+  color: white;
+  font-family: "Press Start 2P", cursive;
+  font-size: 1.4rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+}
+
+li {
+  list-style-type: none;
+}
+
+a {
+  text-decoration: none;
+  color: #ffd470;
+  -webkit-transition: all 0.25s;
+  transition: all 0.25s;
+}
+
+a:hover, a:focus {
+  color: #c11e01;
+}
+
+.wrapper {
+  max-width: 1280px;
+  width: 80%;
+  margin: 0 auto;
+}
+
+@media (max-width: 800px) {
+  .wrapper {
+    width: 100%;
+  }
+}
+
+header {
+  height: 25vh;
+  text-align: center;
+  padding: 1% 0;
+}
+
+header .wrapper {
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+footer {
+  height: 10vh;
+}
+
+footer .wrapper {
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+footer ul {
+  width: 100%;
+  margin: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+footer ul li {
+  margin: 0 25px;
+}
+
+footer ul i {
+  font-size: 3vmax;
+}
+
+@media (min-width: 1600px) {
+  footer ul i {
+    font-size: 4rem;
+  }
+}
+
+footer button {
+  font-size: 1.25vmax;
+  padding: 15px 40px;
+}
+
+@media (max-width: 800px) {
+  footer button {
+    font-size: 2vmax;
+  }
+}
+
+footer button:hover, footer button:focus {
+  -webkit-transform: none;
+          transform: none;
+}
+
+h1 {
+  font-size: 8vmax;
+  font-family: "Bangers", cursive;
+  color: #c11e01;
+  line-height: 0.85;
+  text-align: center;
+}
+
+@media (min-width: 1600px) {
+  h1 {
+    font-size: 15rem;
+  }
+}
+
+h2 {
+  font-family: "Press Start 2P", cursive;
+  font-size: 1.75vmax;
+  color: #ffd470;
+  line-height: 1.6;
+  text-align: center;
+}
+
+@media (min-width: 1600px) {
+  h2 {
+    font-size: 4rem;
+  }
+}
+
+h4 {
+  color: #ffd470;
+  font-family: "Press Start 2P", cursive;
+  font-size: 1vmax;
+}
+
+img {
+  -ms-interpolation-mode: nearest-neighbor;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: -o-pixelated;
+      image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+button {
+  cursor: pointer;
+  border-style: none;
+  background-color: #c11e01;
+  font-family: "Press Start 2P", cursive;
+  font-size: 2vmax;
+  text-align: center;
+  text-transform: uppercase;
+  color: white;
+  padding: 20px 40px;
+  -webkit-box-shadow: 2px 2px 2px black;
+          box-shadow: 2px 2px 2px black;
+  -webkit-transition: all 0.25s;
+  transition: all 0.25s;
+}
+
+@media (min-width: 1600px) {
+  button {
+    font-size: 4rem;
+  }
+}
+
+button:hover, button:focus {
+  background-color: #2a628f;
+}
+
+button:active {
+  background-color: #2a628f;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+main {
+  height: 65vh;
+  background-color: #ffd470;
+}
+
+main .wrapper {
+  height: 100%;
+}
+
+.setupGame {
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.startScreen {
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+}
+
+.howToPlay {
+  height: 100%;
+  padding: 2% 0;
+  color: black;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+@media (max-width: 800px) {
+  .howToPlay {
+    width: 90%;
+  }
+}
+
+.howToPlay .controls {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+}
+
+.howToPlay .controls h3 {
+  margin-bottom: 2vh;
+}
+
+.howToPlay .controlOptions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.howToPlay .controlImages {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  width: 25%;
+  height: 100%;
+}
+
+.howToPlay .movement,
+.howToPlay .firing {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+}
+
+.howToPlay h3 {
+  font-family: "Bangers", cursive;
+  text-align: center;
+  font-size: 4vmax;
+}
+
+.howToPlay h4 {
+  font-size: 2vmax;
+  text-transform: uppercase;
+  color: black;
+}
+
+.howToPlay p {
+  font-size: 1vmax;
+  line-height: 1.6;
+}
+
+@media (min-width: 1600px) {
+  .howToPlay p {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 800px) {
+  .howToPlay p {
+    font-size: 1.5vmax;
+  }
+}
+
+.howToPlay img {
+  width: 7vmax;
+}
+
+.howToPlay .movement .keyboard img {
+  width: 5vmax;
+}
+
+.howToPlay .firing .keyboard img {
+  width: 9vmax;
+}
+
+.selectionForm {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  color: black;
+}
+
+.selectionForm label {
+  font-family: "Bangers", cursive;
+  font-size: 3.75vmax;
+}
+
+@media (min-width: 1600px) {
+  .selectionForm label {
+    font-size: 6rem;
+  }
+}
+
+.selectionForm label img {
+  padding: 5px;
+  width: 10vmin;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+@media (max-width: 800px) {
+  .selectionForm label img {
+    width: 10vmax;
+  }
+}
+
+.selectionForm input[type="text"] {
+  width: 80%;
+  border: none;
+  padding: 1.5rem;
+  margin-bottom: 2%;
+  font-family: "Press Start 2P", cursive;
+  font-size: 2vmax;
+}
+
+@media (min-width: 1600px) {
+  .selectionForm input[type="text"] {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 800px) {
+  .selectionForm input[type="text"] {
+    width: 90%;
+  }
+}
+
+.selectionForm fieldset {
+  border: none;
+  padding: 0;
+}
+
+.selectionForm legend {
+  width: 100%;
+  text-align: center;
+  font-family: "Bangers", cursive;
+  font-size: 3.75vmax;
+}
+
+@media (min-width: 1600px) {
+  .selectionForm legend {
+    font-size: 6rem;
+  }
+}
+
+.selectionForm .shipChoices {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  margin: 0 auto;
+  width: 80%;
+}
+
+@media (max-width: 800px) {
+  .selectionForm .shipChoices {
+    width: 90%;
+  }
+}
+
+.selectionForm input[type="radio"] {
+  opacity: 0;
+}
+
+.selectionForm input[type="radio"]:checked + label img {
+  outline: 2px solid #c11e01;
+  outline-style: dashed;
+  -webkit-transform: scale(1.15);
+          transform: scale(1.15);
+}
+
+.selectionForm button {
+  font-size: 1.5vmax;
+}
+
+.selectionForm .gameOptions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.selectionForm .gameOptions label {
+  text-align: center;
+  font-size: 2.5vmax;
+  margin: 0.75vmax;
+}
+
+@media (max-width: 800px) {
+  .selectionForm .gameOptions label {
+    font-size: 4vmax;
+  }
+}
+
+@media (max-width: 460px) {
+  .selectionForm .gameOptions label {
+    font-size: 3.5vmax;
+  }
+}
+
+.selectionForm input[type="checkbox"] {
+  opacity: 0;
+}
+
+.selectionForm input[type="checkbox"]:checked + label span {
+  color: #c11e01;
+}
+
+.selectionForm input[type="checkbox"]:focus + label {
+  outline: 2px dotted #c11e01;
+}
+
+.gameOverScreen {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 100%;
+  padding: 2.5% 0;
+  background-color: #13293d;
+}
+
+.gameOverScreen h3 {
+  text-align: center;
+  width: 100%;
+  font-size: 5vmin;
+  font-family: "Bangers", cursive;
+  text-shadow: 1px 1px black;
+}
+
+.gameOverScreen h4 {
+  text-align: center;
+  width: 100%;
+  font-size: 3vmin;
+  font-family: "Bangers", cursive;
+  color: white;
+  text-shadow: 1px 1px black;
+}
+
+.gameOverScreen .buttons {
+  width: 100%;
+  padding: 0 5%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.gameOverScreen .buttons button {
+  font-size: 1.5vmax;
+}
+
+@media (min-width: 1600px) {
+  .gameOverScreen .buttons button {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 460px) {
+  .gameOverScreen .buttons button {
+    width: 45%;
+  }
+}
+
+.leaderboard {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  font-size: 1.1vmax;
+  text-shadow: 1px 1px black;
+}
+
+@media (min-width: 1600px) {
+  .leaderboard {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 800px) {
+  .leaderboard {
+    font-size: 1.5vmax;
+  }
+}
+
+.leaderboard ul {
+  width: 100%;
+  height: 100%;
+  padding: 0 5%;
+}
+
+.leaderboard ul li {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.leaderboard p {
+  margin: 2vmin 0;
+}
+
+.leaderboard p:nth-child(1) {
+  width: 10%;
+}
+
+.leaderboard p:nth-child(2) {
+  width: 34%;
+}
+
+.leaderboard p:nth-child(3) {
+  width: 27%;
+}
+
+.leaderboard p:nth-child(4) {
+  width: 29%;
+  text-align: right;
+}
+
+.yourScore {
+  width: 100%;
+  padding: 0 5%;
+}
+
+.yourScore div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+}
+
+.scoreHighlight {
+  color: #ffd470;
+  text-shadow: 1px 1px #c11e01;
+}
+
+.hidden {
+  display: none;
+}
+
+.selectionMain {
+  height: 75vh;
+}
+
+.gameMain {
+  height: 100vh;
+}
+
+.gameWrapper {
+  max-width: 800px;
+  width: 100%;
+}
+
+.playArea {
+  -ms-interpolation-mode: nearest-neighbor;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: -o-pixelated;
+      image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  background-image: url("../assets/pixelSpace.png");
+  background-position: var(--bgX) var(--bgY);
+  overflow: hidden;
+  position: relative;
+  cursor: none;
+}
+
+.ship {
+  -ms-interpolation-mode: nearest-neighbor;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: -o-pixelated;
+      image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  width: 5vmax;
+  height: 5vmax;
+  -webkit-transform: translate(var(--x), var(--y)) scaleY(var(--scaleY));
+          transform: translate(var(--x), var(--y)) scaleY(var(--scaleY));
+  position: absolute;
+  background: -webkit-gradient(linear, left top, left bottom, from(var(--colour)), to(var(--colour))), var(--imgUrl);
+  background: linear-gradient(var(--colour), var(--colour)), var(--imgUrl);
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
+.bullet {
+  -ms-interpolation-mode: nearest-neighbor;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: -o-pixelated;
+      image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  width: 0.5vmax;
+  height: 1.4vmax;
+  background-image: var(--imgUrl);
+  -webkit-transform: translate(var(--x), var(--y)) rotate(var(--angle));
+          transform: translate(var(--x), var(--y)) rotate(var(--angle));
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
+.pickup {
+  -ms-interpolation-mode: nearest-neighbor;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: -o-pixelated;
+      image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  position: absolute;
+  width: 3.5vmax;
+  height: 3.5vmax;
+  -webkit-transform: translate(var(--x), var(--y));
+          transform: translate(var(--x), var(--y));
+  background: -webkit-gradient(linear, left top, left bottom, from(var(--colour)), to(var(--colour))), var(--imgUrl);
+  background: linear-gradient(var(--colour), var(--colour)), var(--imgUrl);
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
+.gameDisplayArea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0 5%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.gameDisplayArea p {
+  text-align: center;
+  font-size: 2vmin;
+  width: 25%;
+}
+
+@media (max-width: 800px) {
+  .gameDisplayArea p {
+    font-size: 2vmax;
+  }
+}
+
+.noSelect {
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Old versions of Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+}

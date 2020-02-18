@@ -1,0 +1,152 @@
+html {
+    font-size: 62.5%;
+}
+
+body {
+    background-color: black;
+    color: white;
+    font-family: $fontPixel;
+    font-size: 1.4rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+}
+
+ul {
+    padding: 0;
+}
+
+li {
+    list-style-type: none;
+}
+
+a {
+    text-decoration: none;
+    color: $colPrimary;
+    transition: all 0.25s;
+    &:hover,
+    &:focus {
+        color: $colAccent;
+    }
+}
+
+.wrapper {
+    max-width: 1280px;
+    width: 80%;
+    margin: 0 auto;
+
+    @include mq-tablet() {
+        width: 100%;
+    }
+}
+
+header {
+    height: 25vh;
+    text-align: center;
+    padding: 1% 0;
+    .wrapper {
+        height: 100%;
+        @include flexFullCentre(column);
+    }
+}
+
+footer {
+    height: 10vh;
+    .wrapper {
+        height: 100%;
+        @include flexFullCentre(column);
+    }
+
+    ul {
+        width: 100%;
+        margin: 0;
+        @include flexFullCentre();
+        li {
+            margin: 0 25px;
+        }
+
+        i {
+            font-size: 3vmax;
+            @include mq-desktop-large() {
+                font-size: 4rem;
+            }
+        }
+    }
+
+    button {
+        font-size: 1.25vmax;
+        padding: 15px 40px;
+        @include mq-tablet() {
+            font-size: 2vmax;
+        }
+        &:hover,
+        &:focus {
+            transform: none;
+        }
+    }
+}
+
+h1 {
+    font-size: 8vmax;
+    font-family: $fontTitles;
+    color: $colAccent;
+    line-height: 0.85;
+    text-align: center;
+
+    @include mq-desktop-large() {
+        font-size: 15rem;
+    }
+}
+
+h2 {
+    font-family: $fontPixel;
+    font-size: 1.75vmax;
+    color: $colPrimary;
+    line-height: 1.6;
+    text-align: center;
+
+    @include mq-desktop-large() {
+        font-size: 4rem;
+    }
+}
+
+h4 {
+    color: $colPrimary;
+    font-family: $fontPixel;
+    font-size: 1vmax;
+}
+
+img {
+    @include pixelArt();
+}
+
+button {
+    cursor: pointer;
+    border-style: none;
+    background-color: $colAccent;
+    font-family: $fontPixel;
+    font-size: 2vmax;
+    text-align: center;
+    @include mq-desktop-large() {
+        font-size: 4rem;
+    }
+    text-transform: uppercase;
+    color: white;
+    padding: 20px 40px;
+    box-shadow: 2px 2px 2px black;
+    transition: all 0.25s;
+    &:hover,
+    &:focus {
+        background-color: $colSecondaryLight;
+    }
+    &:active {
+        background-color: $colSecondaryLight;
+        box-shadow: none;
+    }
+}
