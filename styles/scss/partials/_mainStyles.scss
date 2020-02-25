@@ -122,6 +122,14 @@ main {
             }
             transition: all 0.3s;
         }
+
+        span {
+            // display: inline-block;
+            img {
+                width: 32px;
+                height: 32px;
+            }
+        }
     }
 
     input[type="text"] {
@@ -189,6 +197,9 @@ main {
             text-align: center;
             font-size: 2.5vmax;
             margin: 0.75vmax;
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
             @include mq-tablet() {
                 font-size: 4vmax;
@@ -212,6 +223,7 @@ main {
         &:focus + label {
             outline: 2px dotted $colAccent;
         }
+
     }
 
 

@@ -89,11 +89,11 @@ setup.changePilot = function () {
 // Check the current music selection and update the checkbox icon accordingly (if checked then it should have a checked icon, if unchecked then it should have an empty square icon)
 setup.checkMusicSelection= function (checked = true) {
     if (setup.$musicBtn['0'].previousElementSibling.checked === checked) {
-        setup.$musicCheckbox.html('<i class="far fa-check-square"></i>');
+        setup.$musicCheckbox.html('<img src="./assets/icons/check-square.svg" alt="">');
         // Enable in-game music
         game.musicEnabled = true;
     } else {
-        setup.$musicCheckbox.html('<i class="far fa-square"></i>');
+        setup.$musicCheckbox.html('<img src="./assets/icons/square.svg">');
         // Disable in-game music
         game.musicEnabled = false;
     }
@@ -102,11 +102,11 @@ setup.checkMusicSelection= function (checked = true) {
 // Check the current sound fx selection and update the checkbox icon accordingly (if checked then it should have a checked icon, if unchecked then it should have an empty square icon)
 setup.checkSfxSelection = function (checked = true) {
     if (setup.$sfxBtn['0'].previousElementSibling.checked === checked) {
-        setup.$sfxCheckbox.html('<i class="far fa-check-square"></i>');
+        setup.$sfxCheckbox.html('<img src="./assets/icons/check-square.svg" alt="">');
         // Enable in-game sound fx
         game.sfxEnabled = true;
     } else {
-        setup.$sfxCheckbox.html('<i class="far fa-square"></i>');
+        setup.$sfxCheckbox.html('<img src="./assets/icons/square.svg">');
         // Disable in-game sound fx
         game.sfxEnabled = false;
     }
@@ -115,11 +115,11 @@ setup.checkSfxSelection = function (checked = true) {
 // Check the current fullscreen selection and update the checkbox icon accordingly (if checked then it should have a checked icon, if unchecked then it should have an empty square icon)
 setup.checkFullscreenSelection = function (checked = true) {
     if (setup.$fullscreenBtn['0'].previousElementSibling.checked === checked) {
-        setup.$fullscreenCheckbox.html('<i class="far fa-check-square"></i>');
+        setup.$fullscreenCheckbox.html('<img src="./assets/icons/check-square.svg" alt="">');
         // Fullscreen is checked so go into fullscreen mode
         setup.$main['0'].requestFullscreen();
     } else {
-        setup.$fullscreenCheckbox.html('<i class="far fa-square"></i>');
+        setup.$fullscreenCheckbox.html('<img src="./assets/icons/square.svg">');
         // Fullscreen is unchecked so exit fullscreen mode
         document.exitFullscreen();
     }

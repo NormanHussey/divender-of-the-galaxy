@@ -2,8 +2,6 @@ const cacheName = 'cache-v1';
 const assets = [
     './',
     './index.html',
-    // './manifest.json',
-    // './sw.js',
     './styles/styles.css',
     './scripts/setupPWA.js',
     './scripts/gameScript.js',
@@ -41,6 +39,8 @@ const assets = [
     './assets/icons/redSilverShipIcon.png',
     './assets/icons/sleekBlueShipIcon.png',
     './assets/icons/spacebar.png',
+    './assets/icons/square.svg',
+    './assets/icons/check-square.svg',
     './assets/pickups/healthPickup.png',
     './assets/pickups/homingMissilePickup.png',
     './assets/pickups/nukePickup.png',
