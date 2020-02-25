@@ -1,6 +1,6 @@
 {
     "name": "Divender of the Galaxy",
-    "short_name": "Divender",
+    "short_name": "Divender of the Galaxy",
     "start_url": "./index.html",
     "display": "standalone",
     "orientation": "portrait",
