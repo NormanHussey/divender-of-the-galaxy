@@ -2,12 +2,15 @@ const cacheName = 'cache-v1';
 const assets = [
     './',
     './index.html',
+    // './manifest.json',
+    // './sw.js',
     './styles/styles.css',
     './scripts/setupPWA.js',
     './scripts/gameScript.js',
     './scripts/jquery-3.4.1.min.js',
     './scripts/mainScript.js',
-    './scripts/gameScript.js',
+    './assets/icons/icon-192x192.png',
+    './assets/icons/icon-512x512.png',
     './assets/favicons/android-chrome-192x192.png',
     './assets/favicons/android-chrome-512x512.png',
     './assets/favicons/apple-touch-icon.png',
@@ -62,36 +65,22 @@ const assets = [
     './assets/fonts/pressstart2p-regular-webfont.woff2'
 ];
 
-// Add a listener to the install event which is triggered by the install button (this button's functionality is located in setupPWA.js)
 self.addEventListener('install', function (event) {
-    // This log is for debugging purposes and should be removed when the app goes to production
     console.log('Service Worker Install Event Fired!');
-    // The waitUntil() function works similarly to jQuery's .when() function in that it will wait until all the promises have been returned before it fires the event. It is a very well-named function!
     event.waitUntil(
-        // We use the .open() method to open the cached that we have named (yet another well-named function) in order to start placing our assets into it
-        // This will return a promise
         caches.open(cacheName)
             .then(function (cache) {
-                // When the promise is returned (ie. the cache has been opened), we will add all of our assets into it (vanilla Javascript truly has some great function names)
                 return cache.addAll(assets);
-                // Once this is complete, our assets are now stored on locally on the device therefore allowing our app to work offline
+            }).catch(function (error) {
+                console.log('Error:', error);
             })
     );
 });
 
-// Add a listener to the fetch event. Fetch is essentially vanilla Javascript's version of jQuery's $.ajax. Therefore this event will be fired when the app goes to search the internet for its assets
 self.addEventListener('fetch', function (event) {
-    // The respondWith() method of the fetch event prevents the browser's default fetch handling (similar to event.preventDefault()), and allows you to provide a custom promise to deal with the response.
-    // Without this intervention, anytime the device is offline the app will automatically search the internet and then fail to load the assets when it can't get access rather than searching for the assets that we've already conveniently stored locally on the device's cache.
     event.respondWith(
-        // The .match() function checks to see if the assets stored on the cache match the ones that fetch is looking for
-        // This returns a promise
         caches.match(event.request)
             .then(function (cachedResource) {
-                // Once the promise is returned, we need to check if it is successful.
-                // The return function below is really just an IF statement that has been shortened
-                // If the assets in the cache DO match the ones that fetch was requesting then return them
-                // OR IF they DO NOT match (or are not present) then go to the internet and fetch them (in other words, proceed with the default behaviour that we interrupted with the .respondWith() function)
                 return cachedResource || fetch(event.request);
             })
         );
