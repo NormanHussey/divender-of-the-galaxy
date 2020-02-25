@@ -246,6 +246,20 @@ html {
   --imgUrl: url('');
 }
 
+@font-face {
+  font-family: 'bangersregular';
+  src: url("../assets/fonts/bangers-regular-webfont.woff2") format("woff2"), url("../assets/fonts/bangers-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'press_start_2pregular';
+  src: url("../assets/fonts/pressstart2p-regular-webfont.woff2") format("woff2"), url("../assets/fonts/pressstart2p-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 html {
   font-size: 62.5%;
 }
@@ -253,7 +267,7 @@ html {
 body {
   background-color: black;
   color: white;
-  font-family: "Press Start 2P", cursive;
+  font-family: "press_start_2pregular";
   font-size: 1.4rem;
 }
 
@@ -391,7 +405,7 @@ footer button:hover, footer button:focus {
 
 h1 {
   font-size: 8vmax;
-  font-family: "Bangers", cursive;
+  font-family: "bangersregular";
   color: #c11e01;
   line-height: 0.85;
   text-align: center;
@@ -404,7 +418,7 @@ h1 {
 }
 
 h2 {
-  font-family: "Press Start 2P", cursive;
+  font-family: "press_start_2pregular";
   font-size: 1.75vmax;
   color: #ffd470;
   line-height: 1.6;
@@ -419,7 +433,7 @@ h2 {
 
 h4 {
   color: #ffd470;
-  font-family: "Press Start 2P", cursive;
+  font-family: "press_start_2pregular";
   font-size: 1vmax;
 }
 
@@ -436,7 +450,7 @@ button {
   cursor: pointer;
   border-style: none;
   background-color: #c11e01;
-  font-family: "Press Start 2P", cursive;
+  font-family: "press_start_2pregular";
   font-size: 2vmax;
   text-align: center;
   text-transform: uppercase;
@@ -602,7 +616,7 @@ main .wrapper {
 }
 
 .howToPlay h3 {
-  font-family: "Bangers", cursive;
+  font-family: "bangersregular";
   text-align: center;
   font-size: 4vmax;
 }
@@ -660,7 +674,7 @@ main .wrapper {
 }
 
 .selectionForm label {
-  font-family: "Bangers", cursive;
+  font-family: "bangersregular";
   font-size: 3.75vmax;
 }
 
@@ -688,7 +702,7 @@ main .wrapper {
   border: none;
   padding: 1.5rem;
   margin-bottom: 2%;
-  font-family: "Press Start 2P", cursive;
+  font-family: "press_start_2pregular";
   font-size: 2vmax;
 }
 
@@ -712,7 +726,7 @@ main .wrapper {
 .selectionForm legend {
   width: 100%;
   text-align: center;
-  font-family: "Bangers", cursive;
+  font-family: "bangersregular";
   font-size: 3.75vmax;
 }
 
@@ -832,7 +846,7 @@ main .wrapper {
   text-align: center;
   width: 100%;
   font-size: 5vmin;
-  font-family: "Bangers", cursive;
+  font-family: "bangersregular";
   text-shadow: 1px 1px black;
 }
 
@@ -840,7 +854,7 @@ main .wrapper {
   text-align: center;
   width: 100%;
   font-size: 3vmin;
-  font-family: "Bangers", cursive;
+  font-family: "bangersregular";
   color: white;
   text-shadow: 1px 1px black;
 }

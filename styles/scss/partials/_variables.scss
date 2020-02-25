@@ -13,8 +13,26 @@
 
 // SCSS Variables
 
-$fontTitles: 'Bangers', cursive;
-$fontPixel: 'Press Start 2P', cursive;
+@font-face {
+    font-family: 'bangersregular';
+    src: url('../assets/fonts/bangers-regular-webfont.woff2') format('woff2'),
+         url('../assets/fonts/bangers-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  
+  }
+  
+  @font-face {
+    font-family: 'press_start_2pregular';
+    src: url('../assets/fonts/pressstart2p-regular-webfont.woff2') format('woff2'),
+         url('../assets/fonts/pressstart2p-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  
+  }
+
+$fontTitles: 'bangersregular';
+$fontPixel: 'press_start_2pregular';
 
 // Colour Palette
 
