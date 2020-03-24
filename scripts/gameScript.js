@@ -69,12 +69,12 @@ game.setupNewGame = function() {
     // Store an array of available ship types
     game.ships = [
         'url("../assets/ships/greenShip.gif")',
-        'url("../assets/ships/redSilverShip.gif")',
         'url("../assets/ships/bigBlueShip.gif")',
         'url("../assets/ships/bigRedShip.gif")',
         'url("../assets/ships/biggerRedShip.gif")',
         'url("../assets/ships/bigGreenShip.gif")',
         'url("../assets/ships/sleekBlueShip.gif")',
+        'url("../assets/ships/redSilverShip.gif")',
     ];
 
     // Filter the ships array to remove the ship that the player chose so that enemies will never have the same ship as the player
