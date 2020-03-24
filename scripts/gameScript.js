@@ -1185,14 +1185,19 @@ game.createExplosion= function (x, y) {
 // Load in the leaderboard from the cache
 game.loadLeaderboard = function () {
 
-    if (!localStorage.leaderboard) {
-        // If the leaderboard does not exist in the cache (this is the first time playing the game in this browser) then set the leaderboard variable to an empty array and create a leaderboard item in the cache and set it to an empty JSON object
-        game.leaderboard = [];
-        localStorage.setItem('leaderboard', '{}');
-    } else {
-        // If the leaderboard does exist in the cache then set the leaderboard variable to it's value
-        game.leaderboard = JSON.parse(localStorage.leaderboard);
-    }
+    // if (!localStorage.leaderboard) {
+    //     // If the leaderboard does not exist in the cache (this is the first time playing the game in this browser) then set the leaderboard variable to an empty array and create a leaderboard item in the cache and set it to an empty JSON object
+    //     game.leaderboard = [];
+    //     localStorage.setItem('leaderboard', '{}');
+    // } else {
+    //     // If the leaderboard does exist in the cache then set the leaderboard variable to it's value
+    //     game.leaderboard = JSON.parse(localStorage.leaderboard);
+    // }
+
+    game.leaderboardDB = firebase.database().ref('leaderboard');
+    game.leaderboardDB.on('value', (response) => {
+        game.leaderboard = response.val();
+    });
 
 };
 
@@ -1233,9 +1238,11 @@ game.saveLeaderboard = function() {
     // Update the leaderboard variable on the namespace with the newest entry
     game.updateLeaderboard();
     // Turn the leaderboard array into a JSON string
-    const leaderboardString = JSON.stringify(game.leaderboard);
+    // const leaderboardString = JSON.stringify(game.leaderboard);
     // Store the leaderboard JSON string into the leaderboard property in the cache
-    localStorage.setItem('leaderboard', leaderboardString);
+    // localStorage.setItem('leaderboard', leaderboardString);
+    game.leaderboardDB.update(game.leaderboard);
+
  
 };
 
